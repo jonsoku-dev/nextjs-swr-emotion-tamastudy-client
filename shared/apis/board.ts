@@ -16,8 +16,17 @@ export interface IBoard {
 }
 
 export type IBoardPaging = BasePaging<IBoard>;
+export interface IBoardCreateRequest {
+  title: string;
+  description: string;
+  categoryId: number;
+}
+export interface IBoardUpdateRequest {
+  title?: string;
+  description?: string;
+  categoryId?: number;
+}
 
-export const getBoards = async (): Promise<IBoardPaging | null> => fetcher(`${BOARD_URI}/v2`);
 export const getBoard = (boardId: number | string) => async (): Promise<IBoard | null> =>
   fetcher(`${BOARD_URI}/${boardId}`);
 

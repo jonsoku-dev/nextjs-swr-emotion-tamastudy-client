@@ -11,6 +11,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => (
       fetcher,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      shouldRetryOnError: false,
       refreshInterval: 0,
       onError: (error) => {
         if (error.status !== 403 && error.status !== 401) {

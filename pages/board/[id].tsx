@@ -5,14 +5,12 @@ import React, { useCallback, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { deleteBoard, updateBoard } from '../../shared/apis';
 import useBoard from '../../shared/hooks/useBoard';
-import useBoards from '../../shared/hooks/useBoards';
 
 const BoardPage = () => {
   const router = useRouter();
 
   const boardId = router.query['id'] as string;
 
-  const { setBoards } = useBoards();
   const { board, isLoading, setBoard } = useBoard(boardId);
 
   const handleUpdateBoard = useCallback(async () => {
@@ -23,7 +21,6 @@ const BoardPage = () => {
   const handleDeleteBoard = useCallback(async () => {
     await deleteBoard(boardId);
     await setBoard(null);
-    await setBoards();
     await router.push('/');
   }, [boardId]);
 
@@ -40,8 +37,8 @@ const BoardPage = () => {
       <button onClick={handleUpdateBoard}>{`${boardId}번 게시물 `}UPDATE DUMMY POST!!!</button>
       <button onClick={handleDeleteBoard}>{`${boardId}번 게시물 `}DELETE DUMMY POST!!!</button>
       <p>
-        <Link href="/">
-          <a>Go home</a>
+        <Link href="/board">
+          <a>Go to Board</a>
         </Link>
       </p>
     </Layout>

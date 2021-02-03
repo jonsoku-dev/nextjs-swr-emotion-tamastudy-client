@@ -1,11 +1,14 @@
+import nookies from 'nookies';
 import useSWR from 'swr';
 
-import { getUser } from '../apis';
+import { IUser } from '../apis';
 import { JOIN_USER, LOGIN_USER, LOGOUT_USER, TOKEN } from '../enums';
 import axios from '../utils/axios';
 
-const useFetchedUser = () => {
-  const { data, error, mutate } = useSWR('getUser', getUser);
+const useFetchedUser = (initialUser: IUser | null) => {
+  const { data, error, mutate } = useSWR('/v1/user/authenticate', {
+    initialData: initialUser
+  });
 
   const user = data;
   const isLoading = !data;
@@ -19,20 +22,12 @@ const useFetchedUser = () => {
   };
 };
 
-const useUsers = () => {
-  const { user, error, isLoading, setUser } = useFetchedUser();
+const useUsers = (initialUser: IUser | null) => {
+  const { user, error, isLoading, setUser } = useFetchedUser(initialUser);
 
   if (error?.response.status === 403 || error?.response.status === 401) {
     localStorage.removeItem(TOKEN);
   }
-
-  const setAuthorization = (token: string) => {
-    localStorage.setItem(TOKEN, token);
-  };
-
-  const removeAuthorization = () => {
-    localStorage.removeItem(TOKEN);
-  };
 
   const joinUser = async () => {
     try {
@@ -53,7 +48,10 @@ const useUsers = () => {
         email: 'the2792@gmail.com',
         password: '1234'
       });
-      setAuthorization(res.data.token);
+      nookies.set(null, 'jwt', res.data.token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/'
+      });
       await setUser();
     } catch (e) {
       console.log(e);
@@ -63,7 +61,7 @@ const useUsers = () => {
   const logoutUser = async () => {
     try {
       await axios.get(LOGOUT_USER);
-      removeAuthorization();
+      nookies.destroy(null, 'jwt');
       await setUser(null);
     } catch (e) {
       console.log(e);
