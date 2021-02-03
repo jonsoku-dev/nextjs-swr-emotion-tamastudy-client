@@ -1,7 +1,9 @@
-export const TOKEN = 'token';
+export const JWT_TOKEN = 'jwt';
 
 // api url
-export const AUTHENTICATE = '/v1/user/authenticate';
-export const JOIN_USER = '/v1/user/join';
-export const LOGIN_USER = '/v1/user/login';
-export const LOGOUT_USER = '/v1/user/logout';
+export enum USER_URI {
+  GET_USER = 'http://localhost:8080/api/v1/user/authenticate',
+  JOIN_USER = 'http://localhost:8080/api/v1/user/join',
+  LOGIN_USER = 'http://localhost:8080/api/v1/user/login',
+  LOGOUT_USER = 'http://localhost:8080/api/v1/user/logout'
+}

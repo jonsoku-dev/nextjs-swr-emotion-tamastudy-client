@@ -5,6 +5,7 @@ import React, { useCallback } from 'react';
 
 import Layout from '../../components/Layout';
 import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest, IUser } from '../../shared/apis';
+import { BOARD_URI, JWT_TOKEN, USER_URI } from '../../shared/enums';
 import usePagingCrud from '../../shared/hooks/usePagingCrud';
 import useUsers from '../../shared/hooks/useUsers';
 
@@ -14,13 +15,18 @@ export interface IndexProps {
 }
 
 const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
-  const { user, joinUser, loginUser, logoutUser } = useUsers(initialUser);
+  const {
+    fetch: { user, isLoggedIn },
+    joinUser,
+    loginUser,
+    logoutUser
+  } = useUsers(initialUser);
   const {
     fetch: { data },
     create,
     remove,
     update
-  } = usePagingCrud<IBoard, IBoardCreateRequest, IBoardUpdateRequest>('/v1/board', initialBoards);
+  } = usePagingCrud<IBoard, IBoardCreateRequest, IBoardUpdateRequest>(BOARD_URI.BASE, initialBoards);
 
   const onClickCreateBoard = useCallback(async () => {
     await create({
@@ -48,7 +54,11 @@ const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
     <Layout title="Home | Next.js + TypeScript Example">
       <h1>Hello {user?.username}</h1>
       <button onClick={joinUser}>JOIN!!!</button>
-      {user ? <button onClick={logoutUser}>Logout</button> : <button onClick={loginUser}>Login To Continue</button>}
+      {isLoggedIn ? (
+        <button onClick={logoutUser}>Logout</button>
+      ) : (
+        <button onClick={loginUser}>Login To Continue</button>
+      )}
       <button onClick={onClickCreateBoard}>CREATE DUMMY POST!!!</button>
       {data?.content?.map((board) => {
         return (
@@ -62,8 +72,12 @@ const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
                 <span>{`${board.title}: ${board.id}`}</span>
               </a>
             </Link>
-            <button onClick={onClickDeleteBoard(board.id)}>X</button>
-            <button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</button>
+            {isLoggedIn && (
+              <>
+                <button onClick={onClickDeleteBoard(board.id)}>X</button>
+                <button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</button>
+              </>
+            )}
           </li>
         );
       })}
@@ -73,10 +87,10 @@ const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async (ctx) => {
   const [getBoards, getUser] = await Promise.all([
-    fetch('http://localhost:8080/api/v1/board'),
-    fetch('http://localhost:8080/api/v1/user/authenticate', {
+    fetch(BOARD_URI.BASE),
+    fetch(USER_URI.GET_USER, {
       headers: {
-        Authorization: `Bearer ${nookies.get(ctx)['jwt']}`
+        Authorization: `Bearer ${nookies.get(ctx)[JWT_TOKEN]}`
       }
     })
   ]);

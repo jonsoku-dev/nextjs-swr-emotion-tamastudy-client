@@ -13,7 +13,7 @@ const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
   initialData: BasePaging<ResponseType> | null,
   fetchOptions?: ConfigInterface
 ) => {
-  const [loading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const loadingTimeout = () => {
     setIsLoading(false);
   };
@@ -83,7 +83,7 @@ const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
     fetch: {
       data: memoizedData,
       error,
-      loading,
+      isLoading,
       mutate
     },
     create,

@@ -1,4 +1,4 @@
-import { AUTHENTICATE } from '../enums';
+import { USER_URI } from '../enums';
 import fetcher from '../utils/fetcher';
 
 export interface IUser {
@@ -7,4 +7,4 @@ export interface IUser {
   email: string;
 }
 
-export const getUser = async (): Promise<IUser | null> => fetcher(AUTHENTICATE);
+export const getUser = async (): Promise<IUser | null> => fetcher(USER_URI.GET_USER);
