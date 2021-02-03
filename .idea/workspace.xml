@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/apis/board.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/board.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useBoards.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useBoards.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/utils/fetcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/utils/fetcher.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/auth/PrincipalDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/auth/PrincipalDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/auth/PrincipalDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/auth/PrincipalDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/jwt/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/jwt/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/jwt/JwtAuthorizationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/config/jwt/JwtAuthorizationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/entity/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/entity/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepositoryCustom.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepositoryCustom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/BoardRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/domain/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/BoardSearchCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/BoardSearchCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/BoardUserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/BoardUserDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/LoginRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/com/tamastudy/tama/dto/LoginRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/com/tamastudy/tama/domain/repository/BoardRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/com/tamastudy/tama/domain/repository/BoardRepositoryTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1nqBZkjDbGm8y2B4rHrYlFxM73N" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="ReadonlyStatusHandler">
+    <option name="SHOW_DIALOG" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shared/utils" />
+      <recent name="$PROJECT_DIR$/shared" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="" />
+      <created>1612107797500</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1612107797500</updated>
+      <workItem from="1612107798723" duration="36344000" />
+      <workItem from="1612240066611" duration="16321000" />
+      <workItem from="1612332988824" duration="2993000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="3519" y="659" key="#ESLint" timestamp="1612239374651">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3519" y="659" key="#ESLint/0.25.5120.1415@0.25.5120.1415" timestamp="1612239374651" />
+    <state x="3591" y="524" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1612239562250">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3591" y="524" key="#com.intellij.fileTypes.FileTypeChooser/0.25.5120.1415@0.25.5120.1415" timestamp="1612239562250" />
+    <state x="3586" y="478" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1612154455228">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3586" y="478" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.5120.1415@0.25.5120.1415" timestamp="1612154455228" />
+    <state x="2683" y="298" key="SettingsEditor" timestamp="1612239837667">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="2683" y="298" key="SettingsEditor/0.25.5120.1415@0.25.5120.1415" timestamp="1612239837667" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1612239047516">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/0.25.5120.1415@0.25.5120.1415" timestamp="1612239047516" />
+    <state x="3788" y="467" width="1329" height="522" key="find.popup" timestamp="1612259638605">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3788" y="467" width="1329" height="522" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612259638605" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612335756720">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612335756720" />
+    <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
+      <screen x="0" y="25" width="5120" height="1415" />
+    </state>
+    <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.25.5120.1415@0.25.5120.1415" timestamp="1612258440066" />
+  </component>
+</project>
