@@ -6,12 +6,12 @@ import { IUser } from '../apis';
 import { JWT_TOKEN, USER_URI } from '../enums';
 import axios from '../utils/axios';
 
-interface IUserJoinRequestForm {
+export interface IUserJoinRequestForm {
   email: string;
   password: string;
   username: string;
 }
-interface IUserLoginRequestForm {
+export interface IUserLoginRequestForm {
   email: string;
   password: string;
 }

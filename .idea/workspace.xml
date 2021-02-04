@@ -11,16 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/join.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/login.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/common/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/common/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/common/Layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/enums/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/enums/user.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/hooks/useUserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useUserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/hooks/useUsers.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +53,7 @@
     <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -120,10 +118,10 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3586" y="478" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.5120.1415@0.25.5120.1415" timestamp="1612447041980" />
-    <state x="2683" y="298" key="SettingsEditor" timestamp="1612411314922">
+    <state x="3355" y="63" width="1289" height="964" key="SettingsEditor" timestamp="1612450921941">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="2683" y="298" key="SettingsEditor/0.25.5120.1415@0.25.5120.1415" timestamp="1612411314922" />
+    <state x="3355" y="63" width="1289" height="964" key="SettingsEditor/0.25.5120.1415@0.25.5120.1415" timestamp="1612450921941" />
     <state width="500" height="445" key="SwitcherDM" timestamp="1612239047516">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
@@ -132,10 +130,10 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612450554827" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612450511751">
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612452983647">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612450511751" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612452983647" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
