@@ -1,10 +1,9 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import React, { useCallback } from 'react';
 
-import Layout from '../../components/Layout';
+import Layout from '../../components/common/Layout';
 import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import usePagingCrud from '../../shared/hooks/usePagingCrud';
@@ -22,7 +21,7 @@ const Button = styled('button')`
 `;
 
 const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
-  const { isLoggedIn, user, joinUser, logoutUser, loginUser } = useUserContext();
+  const { isLoggedIn } = useUserContext();
   const {
     fetch: { data },
     create,
@@ -54,18 +53,6 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
 
   return (
     <Layout title="Home | Next.js + TypeScript Example">
-      <h1
-        css={css`
-          background-color: red;
-        `}>
-        Hello {user?.username}
-      </h1>
-      <button onClick={joinUser}>JOIN!!!</button>
-      {isLoggedIn ? (
-        <button onClick={logoutUser}>Logout</button>
-      ) : (
-        <button onClick={loginUser}>Login To Continue</button>
-      )}
       <button onClick={onClickCreateBoard}>CREATE DUMMY POST!!!</button>
       {data?.content?.map((board) => {
         return (

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import useSWR from 'swr';
 
-import Layout from '../../components/Layout';
+import Layout from '../../components/common/Layout';
 import { IBoard } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import { getAsString } from '../../shared/utils/getAsString';
@@ -19,8 +19,6 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
     dedupingInterval: 1500,
     initialData: initialBoard
   });
-
-  console.log(data);
 
   return (
     <Layout title="About | Next.js + TypeScript Example">

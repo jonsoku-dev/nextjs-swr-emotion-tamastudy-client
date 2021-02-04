@@ -23,12 +23,7 @@ const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         shouldRetryOnError: false,
-        refreshInterval: 0,
-        onError: (error) => {
-          if (error.status !== 403 && error.status !== 401) {
-            console.log('auth error from swr config');
-          }
-        }
+        refreshInterval: 0
       }}>
       <ThemeProvider theme={theme}>
         <UserProvider initialUser={initialUser}>
@@ -40,7 +35,7 @@ const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
 };
 
 App.getInitialProps = async (appCtx: AppContext) => {
-  const token = appCtx.ctx.req?.headers?.cookie?.split('=')[1];
+  const token = appCtx.ctx.req?.headers?.cookie?.split('=')[1] ?? null;
   const getUser = await fetch(USER_URI.GET_USER, {
     headers: {
       Authorization: `Bearer ${token}`

@@ -11,14 +11,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/md/emotion.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/md/lint.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/List.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ListDetail.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ListItem.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/users/[id].tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/users/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/common/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useUserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useUserContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useUsers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +67,7 @@
       <recent name="$PROJECT_DIR$/shared/hooks" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/components/common" />
       <recent name="$PROJECT_DIR$/shared/utils" />
       <recent name="$PROJECT_DIR$/shared" />
     </key>
@@ -125,14 +128,14 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state width="500" height="445" key="SwitcherDM/0.25.5120.1415@0.25.5120.1415" timestamp="1612239047516" />
-    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1612369663022">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1612450554827">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612369663022" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612446944228">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612450554827" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612450511751">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612446944228" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612450511751" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
