@@ -9,7 +9,7 @@ export interface IndexProps extends InitialUserProps {
 }
 
 const IndexPage: NextPage<IndexProps> = ({ initialUser }) => {
-  console.log(initialUser);
+  console.log(asd);
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <h1>Hello Next.js</h1>
