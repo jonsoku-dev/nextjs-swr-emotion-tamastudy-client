@@ -28,9 +28,9 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
       <p>This is the {boardId} page</p>
       <div>
         <div>
-          <p>{initialBoard?.title}</p>
-          <p>{initialBoard?.description}</p>
-          <p>{initialBoard?.user.email}</p>
+          <p>{data?.title}</p>
+          <p>{data?.description}</p>
+          <p>{data?.user.email}</p>
         </div>
         <Link href="/board">
           <a>Go to Board</a>
