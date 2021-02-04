@@ -1,12 +1,25 @@
 import nookies from 'nookies';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
 import { IUser } from '../apis';
 import { JWT_TOKEN, USER_URI } from '../enums';
 import axios from '../utils/axios';
 
-const useUsers = (initialUser?: IUser | null) => {
+interface IUserContext {
+  user: IUser | null;
+  error: any;
+  isLoading: boolean;
+  mutate: any;
+  isLoggedIn: boolean;
+  joinUser: () => void;
+  loginUser: () => void;
+  logoutUser: () => void;
+}
+
+const UserContext = createContext<IUserContext>({} as IUserContext);
+
+export const UserProvider: FC<any> = ({ initialUser, children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const loadingTimeout = () => {
     setIsLoading(false);
@@ -59,18 +72,21 @@ const useUsers = (initialUser?: IUser | null) => {
 
   const memoizedData = useMemo(() => data, [data]);
 
-  return {
-    fetch: {
-      user: memoizedData,
-      error,
-      isLoading,
-      mutate,
-      isLoggedIn: !!memoizedData
-    },
-    joinUser,
-    loginUser,
-    logoutUser
-  };
+  return (
+    <UserContext.Provider
+      value={{
+        user: memoizedData,
+        error,
+        isLoading,
+        mutate,
+        isLoggedIn: !!memoizedData,
+        joinUser,
+        loginUser,
+        logoutUser
+      }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-export default useUsers;
+export const useUserContext = () => useContext(UserContext);

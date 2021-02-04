@@ -11,9 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/hooks/useUserContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useUsers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useUsers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,12 +58,12 @@
     <option name="SHOW_DIALOG" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shared/hooks" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/shared/utils" />
       <recent name="$PROJECT_DIR$/shared" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/shared/hooks" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -124,10 +126,10 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612369663022" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612409803613">
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612446909068">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612409803613" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612446909068" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>

@@ -5,7 +5,7 @@ import { SWRConfig } from 'swr';
 
 import { IUser } from '../shared/apis';
 import { USER_URI } from '../shared/enums';
-import useUsers from '../shared/hooks/useUsers';
+import { UserProvider } from '../shared/hooks/useUserContext';
 import theme from '../shared/styles/theme';
 import fetcher from '../shared/utils/fetcher';
 
@@ -16,7 +16,6 @@ export interface InitialUserProps {
 interface AppPageProps extends InitialUserProps, AppProps {}
 
 const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
-  useUsers(initialUser); // authenticate user
   return (
     <SWRConfig
       value={{
@@ -32,7 +31,9 @@ const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
         }
       }}>
       <ThemeProvider theme={theme}>
-        <Component initialUser={initialUser} {...pageProps} />
+        <UserProvider initialUser={initialUser}>
+          <Component initialUser={initialUser} {...pageProps} />
+        </UserProvider>
       </ThemeProvider>
     </SWRConfig>
   );

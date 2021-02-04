@@ -8,7 +8,7 @@ import Layout from '../../components/Layout';
 import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import usePagingCrud from '../../shared/hooks/usePagingCrud';
-import useUsers from '../../shared/hooks/useUsers';
+import { useUserContext } from '../../shared/hooks/useUserContext';
 import { InitialUserProps } from '../_app';
 
 export interface IndexProps extends InitialUserProps {
@@ -21,13 +21,8 @@ const Button = styled('button')`
   border-radius: 3px;
 `;
 
-const BoardIndexPage: NextPage<IndexProps> = ({ initialUser, initialBoards }) => {
-  const {
-    fetch: { user, isLoggedIn },
-    joinUser,
-    loginUser,
-    logoutUser
-  } = useUsers(initialUser);
+const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
+  const { isLoggedIn, user, joinUser, logoutUser, loginUser } = useUserContext();
   const {
     fetch: { data },
     create,
