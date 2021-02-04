@@ -9,8 +9,6 @@ import useUsers from '../shared/hooks/useUsers';
 import theme from '../shared/styles/theme';
 import fetcher from '../shared/utils/fetcher';
 
-// import { wrapper } from '../state';
-
 export interface InitialUserProps {
   initialUser?: IUser | null;
 }
@@ -52,5 +50,4 @@ App.getInitialProps = async (appCtx: AppContext) => {
   };
 };
 
-// export default wrapper.withRedux(App);
 export default App;
