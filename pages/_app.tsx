@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@emotion/react';
 import { AppContext, AppProps } from 'next/app';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -5,6 +6,7 @@ import { SWRConfig } from 'swr';
 import { IUser } from '../shared/apis';
 import { USER_URI } from '../shared/enums';
 import useUsers from '../shared/hooks/useUsers';
+import theme from '../shared/styles/theme';
 import fetcher from '../shared/utils/fetcher';
 
 // import { wrapper } from '../state';
@@ -31,7 +33,9 @@ const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
           }
         }
       }}>
-      <Component initialUser={initialUser} {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Component initialUser={initialUser} {...pageProps} />
+      </ThemeProvider>
     </SWRConfig>
   );
 };

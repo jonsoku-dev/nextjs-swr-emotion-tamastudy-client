@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import React, { useCallback } from 'react';
@@ -12,6 +14,12 @@ import { InitialUserProps } from '../_app';
 export interface IndexProps extends InitialUserProps {
   initialBoards: IBoardPaging | null;
 }
+
+const Button = styled('button')`
+  padding: 20px;
+  background-color: ${(props) => props.theme.primary};
+  border-radius: 3px;
+`;
 
 const BoardIndexPage: NextPage<IndexProps> = ({ initialUser, initialBoards }) => {
   const {
@@ -51,7 +59,12 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialUser, initialBoards }) =>
 
   return (
     <Layout title="Home | Next.js + TypeScript Example">
-      <h1>Hello {user?.username}</h1>
+      <h1
+        css={css`
+          background-color: red;
+        `}>
+        Hello {user?.username}
+      </h1>
       <button onClick={joinUser}>JOIN!!!</button>
       {isLoggedIn ? (
         <button onClick={logoutUser}>Logout</button>
@@ -73,8 +86,8 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialUser, initialBoards }) =>
             </Link>
             {isLoggedIn && (
               <>
-                <button onClick={onClickDeleteBoard(board.id)}>X</button>
-                <button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</button>
+                <Button onClick={onClickDeleteBoard(board.id)}>X</Button>
+                <Button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</Button>
               </>
             )}
           </li>
