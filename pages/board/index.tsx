@@ -1,20 +1,19 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
-import nookies from 'nookies';
 import React, { useCallback } from 'react';
 
 import Layout from '../../components/Layout';
-import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest, IUser } from '../../shared/apis';
-import { BOARD_URI, JWT_TOKEN, USER_URI } from '../../shared/enums';
+import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest } from '../../shared/apis';
+import { BOARD_URI } from '../../shared/enums';
 import usePagingCrud from '../../shared/hooks/usePagingCrud';
 import useUsers from '../../shared/hooks/useUsers';
+import { InitialUserProps } from '../_app';
 
-export interface IndexProps {
+export interface IndexProps extends InitialUserProps {
   initialBoards: IBoardPaging | null;
-  initialUser: IUser | null;
 }
 
-const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
+const BoardIndexPage: NextPage<IndexProps> = ({ initialUser, initialBoards }) => {
   const {
     fetch: { user, isLoggedIn },
     joinUser,
@@ -85,21 +84,12 @@ const BoardIndexPage = ({ initialBoards, initialUser }: IndexProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<IndexProps> = async (ctx) => {
-  const [getBoards, getUser] = await Promise.all([
-    fetch(BOARD_URI.BASE),
-    fetch(USER_URI.GET_USER, {
-      headers: {
-        Authorization: `Bearer ${nookies.get(ctx)[JWT_TOKEN]}`
-      }
-    })
-  ]);
+export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
+  const getBoards = await fetch(BOARD_URI.BASE);
   const initialBoards = getBoards.ok ? await getBoards.json() : null;
-  const initialUser = getUser.ok ? await getUser.json() : null;
   return {
     props: {
-      initialBoards,
-      initialUser
+      initialBoards
     }
   };
 };

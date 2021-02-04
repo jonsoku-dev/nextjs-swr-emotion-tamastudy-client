@@ -6,7 +6,7 @@ import { IUser } from '../apis';
 import { JWT_TOKEN, USER_URI } from '../enums';
 import axios from '../utils/axios';
 
-const useUsers = (initialUser: IUser | null) => {
+const useUsers = (initialUser?: IUser | null) => {
   const [isLoading, setIsLoading] = useState(true);
   const loadingTimeout = () => {
     setIsLoading(false);

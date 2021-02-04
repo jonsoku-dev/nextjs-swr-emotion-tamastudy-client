@@ -1,26 +1,55 @@
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
+import useSWR from 'swr';
 
 import Layout from '../../components/Layout';
+import { IBoard } from '../../shared/apis';
+import { BOARD_URI } from '../../shared/enums';
 import { getAsString } from '../../shared/utils/getAsString';
+import { InitialUserProps } from '../_app';
 
-const BoardPage = () => {
-  const { query } = useRouter();
+interface BoardPageProps extends InitialUserProps {
+  boardId: string;
+  initialBoard: IBoard | null;
+}
 
-  // const boardId = getAsString(query.id || '');
+const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
+  const { data } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
+    dedupingInterval: 1500,
+    initialData: initialBoard
+  });
+
+  console.log(data);
 
   return (
     <Layout title="About | Next.js + TypeScript Example">
       <h1>About</h1>
-      <p>This is the about page</p>
-      <p>
+      <p>This is the {boardId} page</p>
+      <div>
+        <div>
+          <p>{initialBoard?.title}</p>
+          <p>{initialBoard?.description}</p>
+          <p>{initialBoard?.user.email}</p>
+        </div>
         <Link href="/board">
           <a>Go to Board</a>
         </Link>
-      </p>
+      </div>
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<BoardPageProps> = async (ctx) => {
+  const boardId = getAsString(ctx.query.id || '');
+  const [getBoard] = await Promise.all([fetch(`${BOARD_URI.BASE}/${boardId}`)]);
+
+  return {
+    props: {
+      boardId,
+      initialBoard: getBoard.ok ? await getBoard.json() : null
+    }
+  };
 };
 
 export default BoardPage;

@@ -1,14 +1,15 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 
 import Layout from '../components/Layout';
+import { InitialUserProps } from './_app';
 
-export interface IndexProps {
+export interface IndexProps extends InitialUserProps {
   sample?: number;
 }
 
-const IndexPage = ({ sample }: IndexProps) => {
-  console.log(sample);
+const IndexPage: NextPage<IndexProps> = ({ initialUser }) => {
+  console.log(initialUser);
   return (
     <Layout title="Home | Next.js + TypeScript Example">
       <h1>Hello Next.js</h1>
