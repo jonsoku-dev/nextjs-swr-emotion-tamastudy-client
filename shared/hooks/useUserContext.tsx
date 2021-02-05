@@ -61,7 +61,10 @@ export const UserProvider: FC<Props> = ({ initialUser, children }) => {
       setIsLoading(true);
       return;
     }
-    setTimeout(loadingTimeout, 500);
+    const timer = setTimeout(loadingTimeout, 500);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [isValidating]);
 
   const joinUser = useCallback(
@@ -103,7 +106,6 @@ export const UserProvider: FC<Props> = ({ initialUser, children }) => {
 
   const logoutUser = useCallback(
     async (onSuccess?: () => void, onError?: () => void) => {
-      console.log(onSuccess);
       try {
         await axios.get(USER_URI.LOGOUT_USER);
         await mutate(null);

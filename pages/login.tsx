@@ -9,7 +9,8 @@ import { Button, Form, TextInput } from '../components/atoms';
 import { Layout } from '../components/common';
 import { FormItem } from '../components/molecules';
 import { LOGIN_ERROR_MESSAGES } from '../shared/enums';
-import { IUserLoginRequestForm, useUserContext } from '../shared/hooks/useUserContext';
+import { IUserLoginRequestForm, useUserContext } from '../shared/hooks';
+import { getAsString } from '../shared/utils/getAsString';
 
 type FormValues = {
   email: string;
@@ -38,20 +39,16 @@ const LoginPage: NextPage<Props> = () => {
     }
   }, [userContext.isLoggedIn]);
 
-  if (userContext.isLoading) {
-    return <div>Loading ...</div>;
-  }
-
   return (
     <Layout title={'Login Page'} {...userContext}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormItem label={'Email'} errors={errors.email?.message}>
-          <TextInput name={'email'} register={register} />
+          <TextInput name={'email'} register={register} defaultValue={getAsString(router.query.email || '')} />
         </FormItem>
         <FormItem label={'Password'} errors={errors.password?.message}>
           <TextInput name={'password'} register={register} />
         </FormItem>
-        <Button type="submit" text="login" />
+        <Button type="submit" text="login" disabled={userContext.isLoading} />
       </Form>
     </Layout>
   );

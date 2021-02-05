@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import React, { ReactNode } from 'react';
 
 import { Label } from '../../atoms';
@@ -9,8 +9,12 @@ interface Props {
 }
 
 export const FormItem: React.FC<Props> = ({ label, errors, children }) => {
+  const theme = useTheme();
   return (
-    <div css={css``}>
+    <div
+      css={css`
+        margin: ${theme.space}px 0;
+      `}>
       <Label>{label}</Label>
       {children}
       {errors && <p>{errors}</p>}

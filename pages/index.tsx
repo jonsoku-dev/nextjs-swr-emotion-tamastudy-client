@@ -2,7 +2,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 
 import { Layout } from '../components/common';
-import { useUserContext } from '../shared/hooks/useUserContext';
+import { useUserContext } from '../shared/hooks';
 
 export interface IndexProps {}
 

@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { BasePaging } from '../apis/shared';
 import axios from '../utils/axios';
 
-const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
+export const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
   url: string,
   // key?: keyof ResponseType,
   initialData: BasePaging<ResponseType> | null,
@@ -32,30 +32,35 @@ const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
       setIsLoading(true);
       return;
     }
-    setTimeout(loadingTimeout, 500);
+    const timer = setTimeout(loadingTimeout, 500);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [isValidating]);
 
   const create = useCallback(
-    async (createObject: CreateRequest) => {
-      const response = await axios.post(url, createObject, {
-        headers: {
-          Authorization: `Bearer ${nookies.get(null).jwt}`
+    async (createObject: CreateRequest, onSuccess?: () => void, onError?: () => void) => {
+      try {
+        const response = await axios.post(url, createObject);
+        const result = response.data as ResponseType;
+        await mutate();
+        if (onSuccess) {
+          onSuccess();
         }
-      });
-      const result = response.data as ResponseType;
-      await mutate();
-      return result;
+        return result;
+      } catch (e) {
+        console.log(e);
+        if (onError) {
+          onError();
+        }
+      }
     },
     [url, data, mutate]
   );
 
   const update = useCallback(
     async (id: string | number, updateObject: UpdateRequest) => {
-      const response = await axios.patch(`${url}/${id}`, updateObject, {
-        headers: {
-          Authorization: `Bearer ${nookies.get(null).jwt}`
-        }
-      });
+      const response = await axios.patch(`${url}/${id}`, updateObject);
       const result = response.data as ResponseType;
       await mutate();
       return result;
@@ -91,5 +96,3 @@ const usePagingCrud = <ResponseType, CreateRequest, UpdateRequest>(
     remove
   };
 };
-
-export default usePagingCrud;

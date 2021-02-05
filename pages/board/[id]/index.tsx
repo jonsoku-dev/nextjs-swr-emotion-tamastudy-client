@@ -1,22 +1,25 @@
 import { GetServerSideProps } from 'next';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import useSWR from 'swr';
 
-import { Layout } from '../../components/common';
-import { IBoard } from '../../shared/apis';
-import { BOARD_URI } from '../../shared/enums';
-import { useUserContext } from '../../shared/hooks/useUserContext';
-import { getAsString } from '../../shared/utils/getAsString';
-import { InitialUserProps } from '../_app';
+import { Button, CLink } from '../../../components/atoms';
+import { Layout } from '../../../components/common';
+import { baseDeleteAPI, IBoard } from '../../../shared/apis';
+import { BOARD_URI } from '../../../shared/enums';
+import { useBoards, useUserContext } from '../../../shared/hooks';
+import { getAsString } from '../../../shared/utils/getAsString';
 
-interface BoardPageProps extends InitialUserProps {
+interface BoardPageProps {
   boardId: string;
   initialBoard: IBoard | null;
 }
 
 const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
+  const router = useRouter();
+  const { mutate } = useBoards();
   const userContext = useUserContext();
+
   const { data } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
     dedupingInterval: 1500,
     initialData: initialBoard
@@ -32,9 +35,17 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
           <p>{data?.description}</p>
           <p>{data?.user.email}</p>
         </div>
-        <Link href="/board">
-          <a>Go to Board</a>
-        </Link>
+        <Button
+          onClick={() =>
+            baseDeleteAPI(`${BOARD_URI.BASE}/${data?.id}`, () => {
+              mutate();
+              router.push('/board');
+            })
+          }
+          text={'Delete'}
+        />
+        <CLink href={`/board/${data?.id}/edit`}>edit</CLink>
+        <CLink href="/board">Go to Board</CLink>
       </div>
     </Layout>
   );

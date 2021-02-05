@@ -3,16 +3,14 @@ import React from 'react';
 
 interface Props {}
 
-export const Label: React.FC<Props> = ({ children }) => {
+export const HoverMenu: React.FC<Props> = ({ children }) => {
   const theme = useTheme();
   return (
-    <label
+    <li
       css={css`
-        display: flex;
-        font-weight: 600;
-        margin-bottom: ${theme.space}px;
+        padding: ${theme.space}px;
       `}>
       {children}
-    </label>
+    </li>
   );
 };

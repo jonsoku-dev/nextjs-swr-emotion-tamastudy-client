@@ -5,7 +5,8 @@ import { SWRConfig } from 'swr';
 
 import { IUser } from '../shared/apis';
 import { USER_URI } from '../shared/enums';
-import { UserProvider } from '../shared/hooks/useUserContext';
+import { UserProvider } from '../shared/hooks';
+import { GlobalStyle } from '../shared/styles';
 import theme from '../shared/styles/theme';
 import fetcher from '../shared/utils/fetcher';
 
@@ -26,6 +27,7 @@ const App = ({ Component, pageProps, initialUser }: AppPageProps) => {
         refreshInterval: 0
       }}>
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <UserProvider initialUser={initialUser}>
           <Component initialUser={initialUser} {...pageProps} />
         </UserProvider>

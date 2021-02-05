@@ -1,17 +1,20 @@
 import { css, Global } from '@emotion/react';
 import React from 'react';
 
-export const globalStyles = (
+export const GlobalStyle = (props: any) => (
   <Global
+    {...props}
     styles={css`
-      html,
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
       body {
-        padding: 3rem 1rem;
         margin: 0;
-        background: papayawhip;
-        min-height: 100%;
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 24px;
+        font-family: 'Roboto', 'HelveticaNeue', 'Helvetica Neue', sans-serif;
       }
     `}
   />

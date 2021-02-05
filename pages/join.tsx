@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -9,7 +9,7 @@ import { Button, Form, TextInput } from '../components/atoms';
 import { Layout } from '../components/common';
 import { FormItem } from '../components/molecules';
 import { REGISTER_ERROR_MESSAGES } from '../shared/enums';
-import { IUserJoinRequestForm, useUserContext } from '../shared/hooks/useUserContext';
+import { IUserJoinRequestForm, useUserContext } from '../shared/hooks';
 
 interface Props {}
 
@@ -23,7 +23,6 @@ const schema = yup.object().shape({
 });
 
 const JoinPage: NextPage<Props> = () => {
-  const [joined, setJoined] = useState(0);
   const router = useRouter();
   const userContext = useUserContext();
   const { register, handleSubmit, errors } = useForm({
@@ -34,7 +33,7 @@ const JoinPage: NextPage<Props> = () => {
     userContext.joinUser(
       form,
       () => {
-        setJoined((prev) => prev + 1);
+        router.push(`/login?email=${form.email}`, 'login');
       },
       () => {
         alert('ERROR!');
@@ -47,12 +46,6 @@ const JoinPage: NextPage<Props> = () => {
       router.push('/');
     }
   }, [userContext.isLoggedIn]);
-
-  useEffect(() => {
-    if (joined > 0) {
-      router.push('/login');
-    }
-  }, [joined]);
 
   if (userContext.isLoading) {
     return <div>Loading ...</div>;

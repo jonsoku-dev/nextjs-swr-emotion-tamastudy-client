@@ -1,23 +1,15 @@
-import { css } from '@emotion/react';
 import Head from 'next/head';
-import Link from 'next/link';
 import React, { ReactNode } from 'react';
 
 import { IUserContext } from '../../../shared/hooks/useUserContext';
-import { Container } from '../../atoms';
+import { CLink, Container, FlexBox, Header } from '../../atoms';
 
 interface Props extends IUserContext {
   title: string;
   children?: ReactNode;
 }
 
-export const Layout: React.FC<Props> = ({
-  title = 'This is the default title',
-  user,
-  isLoggedIn,
-  logoutUser,
-  children
-}) => {
+export const Layout: React.FC<Props> = ({ title = 'This is the default title', user, isLoggedIn, children }) => {
   return (
     <div>
       <Head>
@@ -27,38 +19,27 @@ export const Layout: React.FC<Props> = ({
       </Head>
       <header>
         <Container>
-          <nav>
+          <FlexBox el={'nav'} vertical={'flex-end'}>
             {isLoggedIn ? (
-              <div>
-                <h1
-                  css={css`
-                    background-color: red;
-                  `}>
-                  Hello {user?.username}
-                </h1>
-                <button onClick={() => logoutUser()}>Logout</button>
-              </div>
+              <>
+                <span>Hello {user?.username}</span>
+                <CLink href={'/logout'}>Logout</CLink>
+                {/*<Button onClick={() => logoutUser()} text={'Logout'} />*/}
+              </>
             ) : (
               <>
-                <Link href={'/login'}>
-                  <a>Login To Continue</a>
-                </Link>
-                <Link href={'/join'}>
-                  <a>Join Us</a>
-                </Link>
+                <CLink href={'/login'}>Login</CLink>
+                <CLink href={'/join'}>Join Us</CLink>
               </>
             )}
-          </nav>
-          <nav>
-            <Link href="/">
-              <a>Home</a>
-            </Link>{' '}
-            |
-            <Link href="/board">
-              <a>Board</a>
-            </Link>{' '}
-            |
-          </nav>
+          </FlexBox>
+          <FlexBox>
+            <Header>Hello World!</Header>
+          </FlexBox>
+          <FlexBox el={'nav'}>
+            <CLink href={'/'}>Home</CLink>
+            <CLink href={'/board'}>Board</CLink>
+          </FlexBox>
         </Container>
       </header>
       <Container el={'main'}>{children}</Container>

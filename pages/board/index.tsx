@@ -1,59 +1,25 @@
-import styled from '@emotion/styled';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import React from 'react';
 
+import { CLink } from '../../components/atoms';
 import { Layout } from '../../components/common';
-import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest } from '../../shared/apis';
+import { IBoardPaging } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
-import usePagingCrud from '../../shared/hooks/usePagingCrud';
-import { useUserContext } from '../../shared/hooks/useUserContext';
+import { useBoards, useUserContext } from '../../shared/hooks';
 import { InitialUserProps } from '../_app';
 
 export interface IndexProps extends InitialUserProps {
   initialBoards: IBoardPaging | null;
 }
 
-const Button = styled('button')`
-  padding: 20px;
-  background-color: ${(props) => props.theme.primary};
-  border-radius: 3px;
-`;
-
 const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
   const userContext = useUserContext();
-  const {
-    fetch: { data },
-    create,
-    remove,
-    update
-  } = usePagingCrud<IBoard, IBoardCreateRequest, IBoardUpdateRequest>(BOARD_URI.BASE, initialBoards);
-
-  const onClickCreateBoard = useCallback(async () => {
-    await create({
-      title: 'test',
-      description: 'hey',
-      categoryId: 1
-    });
-  }, []);
-
-  const onClickDeleteBoard = useCallback(
-    (id: number | string) => async () => {
-      await remove(id);
-    },
-    []
-  );
-
-  const onClickUpdateBoard = useCallback(
-    (id: number | string) => async () => {
-      await update(id, { title: '1234', description: '213213', categoryId: 1 });
-    },
-    []
-  );
+  const { data } = useBoards(initialBoards);
 
   return (
     <Layout title="Home | Next.js + TypeScript Example" {...userContext}>
-      <button onClick={onClickCreateBoard}>CREATE DUMMY POST!!!</button>
+      <CLink href={'/board/create'}>Create Board</CLink>
       {data?.content?.map((board) => {
         return (
           <li key={board.id}>
@@ -66,12 +32,6 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
                 <span>{`${board.title}: ${board.id}`}</span>
               </a>
             </Link>
-            {userContext.isLoggedIn && (
-              <>
-                <Button onClick={onClickDeleteBoard(board.id)}>X</Button>
-                <Button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</Button>
-              </>
-            )}
           </li>
         );
       })}
