@@ -1,8 +1,11 @@
+import 'react-quill/dist/quill.snow.css';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GetServerSideProps, NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, Select, TextInput } from '../../../components/atoms';
@@ -12,6 +15,10 @@ import { basePatchAPI, IBoard, IBoardUpdateRequest, ICategory } from '../../../s
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../../shared/enums';
 import { useBoard, useCategory, useUserContext } from '../../../shared/hooks';
 import { getAsString } from '../../../shared/utils/getAsString';
+
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
+  ssr: false
+});
 
 interface Props {
   boardId: string;
@@ -23,7 +30,9 @@ const schema = yup.object().shape({
   description: yup
     .string()
     .typeError(BOARD_ERROR_MESSAGES.STRING_TYPE)
-    .max(2000, BOARD_ERROR_MESSAGES.MAX_LENGTH_DESCRIPTION),
+    .max(2000, BOARD_ERROR_MESSAGES.MAX_LENGTH_DESCRIPTION)
+    .test('validate-description', BOARD_ERROR_MESSAGES.REQUIRED_DESCRIPTION, (value) => value !== '<p><br></p>')
+    .required(BOARD_ERROR_MESSAGES.REQUIRED_DESCRIPTION),
   categoryId: yup.number().typeError(BOARD_ERROR_MESSAGES.NUMBER_TYPE)
 });
 
@@ -35,7 +44,7 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
 
   const { data: categories } = useCategory();
 
-  const { handleSubmit, register, errors } = useForm({
+  const { handleSubmit, register, errors, control } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
@@ -72,7 +81,14 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
           <TextInput name={'title'} register={register} defaultValue={data?.title} />
         </FormItem>
         <FormItem label={'Description'} errors={errors.description?.message}>
-          <TextInput name={'description'} register={register} defaultValue={data?.description} />
+          <Controller
+            control={control}
+            name="description"
+            defaultValue={data?.description}
+            render={({ onChange, value }) => (
+              <QuillNoSSRWrapper theme="snow" value={value} onChange={onChange} defaultValue={data?.description} />
+            )}
+          />
         </FormItem>
         <Button type="submit" text="edit" />
       </Form>

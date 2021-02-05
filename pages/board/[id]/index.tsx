@@ -1,4 +1,8 @@
+import 'react-quill/dist/quill.snow.css';
+
+import { css } from '@emotion/react';
 import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
 import useSWR from 'swr';
@@ -9,6 +13,10 @@ import { baseDeleteAPI, IBoard } from '../../../shared/apis';
 import { BOARD_URI } from '../../../shared/enums';
 import { useBoards, useUserContext } from '../../../shared/hooks';
 import { getAsString } from '../../../shared/utils/getAsString';
+
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
+  ssr: false
+});
 
 interface BoardPageProps {
   boardId: string;
@@ -30,10 +38,17 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
       <h1>About</h1>
       <p>This is the {boardId} page</p>
       <div>
-        <div>
+        <div
+          css={css`
+            .ql-container.ql-snow {
+              border: none;
+            }
+            .ql-editor {
+              padding: 0;
+            }
+          `}>
           <p>{data?.title}</p>
-          <p>{data?.description}</p>
-          <p>{data?.user.email}</p>
+          <QuillNoSSRWrapper modules={{ toolbar: false }} value={data?.description} readOnly={true} theme={'snow'} />
         </div>
         <Button
           onClick={() =>
