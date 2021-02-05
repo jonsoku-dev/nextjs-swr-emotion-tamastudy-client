@@ -16,15 +16,15 @@ export interface IUserLoginRequestForm {
   password: string;
 }
 
-interface IUserContext {
+export interface IUserContext {
   user?: IUser | null;
   error: any;
   isLoading: boolean;
   mutate: any;
   isLoggedIn: boolean;
-  joinUser: (form: IUserJoinRequestForm) => Promise<void>;
-  loginUser: (form: IUserLoginRequestForm) => Promise<void>;
-  logoutUser: () => Promise<void>;
+  joinUser: (form: IUserJoinRequestForm, onSuccess?: () => void, onError?: () => void) => Promise<void>;
+  loginUser: (form: IUserLoginRequestForm, onSuccess?: () => void, onError?: () => void) => Promise<void>;
+  logoutUser: (onSuccess?: () => void, onError?: () => void) => Promise<void>;
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext);
@@ -65,10 +65,16 @@ export const UserProvider: FC<Props> = ({ initialUser, children }) => {
   }, [isValidating]);
 
   const joinUser = useCallback(
-    async (form: IUserJoinRequestForm) => {
+    async (form: IUserJoinRequestForm, onSuccess?: () => void, onError?: () => void) => {
       try {
         await axios.post(USER_URI.JOIN_USER, form);
+        if (onSuccess) {
+          onSuccess();
+        }
       } catch (e) {
+        if (onError) {
+          onError();
+        }
         console.log(e);
         // TODO: 에러처리 State
       }
@@ -77,27 +83,39 @@ export const UserProvider: FC<Props> = ({ initialUser, children }) => {
   );
 
   const loginUser = useCallback(
-    async (form: IUserLoginRequestForm) => {
+    async (form: IUserLoginRequestForm, onSuccess?: () => void, onError?: () => void) => {
       try {
         await axios.post(USER_URI.LOGIN_USER, form);
         await mutate();
+        if (onSuccess) {
+          onSuccess();
+        }
       } catch (e) {
         console.log(e);
+        if (onError) {
+          onError();
+        }
         // TODO: 에러처리 State
       }
     },
     [data, mutate]
   );
 
-  const logoutUser = useCallback(async () => {
-    try {
-      await axios.get(USER_URI.LOGOUT_USER);
-      await mutate(null);
-    } catch (e) {
-      console.log(e);
-      // TODO: 에러처리 State
-    }
-  }, [data, mutate]);
+  const logoutUser = useCallback(
+    async (onSuccess?: () => void, onError?: () => void) => {
+      console.log(onSuccess);
+      try {
+        await axios.get(USER_URI.LOGOUT_USER);
+        await mutate(null);
+        onSuccess && onSuccess();
+      } catch (e) {
+        onError && onError();
+        console.log(e);
+        // TODO: 에러처리 State
+      }
+    },
+    [data, mutate]
+  );
 
   const memoizedData = useMemo(() => data, [data]);
 

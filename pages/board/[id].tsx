@@ -3,9 +3,10 @@ import Link from 'next/link';
 import React from 'react';
 import useSWR from 'swr';
 
-import Layout from '../../components/common/Layout';
+import { Layout } from '../../components/common';
 import { IBoard } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
+import { useUserContext } from '../../shared/hooks/useUserContext';
 import { getAsString } from '../../shared/utils/getAsString';
 import { InitialUserProps } from '../_app';
 
@@ -15,13 +16,14 @@ interface BoardPageProps extends InitialUserProps {
 }
 
 const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
+  const userContext = useUserContext();
   const { data } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
     dedupingInterval: 1500,
     initialData: initialBoard
   });
 
   return (
-    <Layout title="About | Next.js + TypeScript Example">
+    <Layout title="About | Next.js + TypeScript Example" {...userContext}>
       <h1>About</h1>
       <p>This is the {boardId} page</p>
       <div>

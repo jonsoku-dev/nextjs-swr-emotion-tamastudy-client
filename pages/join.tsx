@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Layout from '../components/common/Layout';
+import { Button, Form, TextInput } from '../components/atoms';
+import { Layout } from '../components/common';
+import { FormItem } from '../components/molecules';
 import { REGISTER_ERROR_MESSAGES } from '../shared/enums';
 import { IUserJoinRequestForm, useUserContext } from '../shared/hooks/useUserContext';
 
@@ -21,35 +23,55 @@ const schema = yup.object().shape({
 });
 
 const JoinPage: NextPage<Props> = () => {
+  const [joined, setJoined] = useState(0);
   const router = useRouter();
-  const { isLoading, isLoggedIn, joinUser } = useUserContext();
+  const userContext = useUserContext();
   const { register, handleSubmit, errors } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
-  const onSubmit = (data: IUserJoinRequestForm) => joinUser(data);
+  const onSubmit = (form: IUserJoinRequestForm) => {
+    userContext.joinUser(
+      form,
+      () => {
+        setJoined((prev) => prev + 1);
+      },
+      () => {
+        alert('ERROR!');
+      }
+    );
+  };
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (userContext.isLoggedIn) {
       router.push('/');
     }
-  }, [isLoggedIn]);
+  }, [userContext.isLoggedIn]);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (joined > 0) {
+      router.push('/login');
+    }
+  }, [joined]);
+
+  if (userContext.isLoading) {
     return <div>Loading ...</div>;
   }
 
   return (
-    <Layout>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input name="username" defaultValue="" ref={register} />
-        <p>{errors.username?.message}</p>
-        <input name="email" defaultValue="" ref={register} />
-        <p>{errors.email?.message}</p>
-        <input name="password" defaultValue="" ref={register} />
-        <p>{errors.password?.message}</p>
-        <input type="submit" />
-      </form>
+    <Layout title={'Join Page'} {...userContext}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormItem label={'Username'} errors={errors.username?.message}>
+          <TextInput name={'username'} register={register} />
+        </FormItem>
+        <FormItem label={'Email'} errors={errors.email?.message}>
+          <TextInput name={'email'} register={register} />
+        </FormItem>
+        <FormItem label={'Password'} errors={errors.password?.message}>
+          <TextInput name={'password'} register={register} />
+        </FormItem>
+        <Button type="submit" text="join" />
+      </Form>
     </Layout>
   );
 };

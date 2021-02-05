@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import React, { useCallback } from 'react';
 
-import Layout from '../../components/common/Layout';
+import { Layout } from '../../components/common';
 import { IBoard, IBoardCreateRequest, IBoardPaging, IBoardUpdateRequest } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import usePagingCrud from '../../shared/hooks/usePagingCrud';
@@ -21,7 +21,7 @@ const Button = styled('button')`
 `;
 
 const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
-  const { isLoggedIn } = useUserContext();
+  const userContext = useUserContext();
   const {
     fetch: { data },
     create,
@@ -52,7 +52,7 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
   );
 
   return (
-    <Layout title="Home | Next.js + TypeScript Example">
+    <Layout title="Home | Next.js + TypeScript Example" {...userContext}>
       <button onClick={onClickCreateBoard}>CREATE DUMMY POST!!!</button>
       {data?.content?.map((board) => {
         return (
@@ -66,7 +66,7 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
                 <span>{`${board.title}: ${board.id}`}</span>
               </a>
             </Link>
-            {isLoggedIn && (
+            {userContext.isLoggedIn && (
               <>
                 <Button onClick={onClickDeleteBoard(board.id)}>X</Button>
                 <Button onClick={onClickUpdateBoard(board.id)}>UPDATE!!!</Button>

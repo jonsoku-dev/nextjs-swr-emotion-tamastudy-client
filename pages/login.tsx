@@ -5,7 +5,9 @@ import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Layout from '../components/common/Layout';
+import { Button, Form, TextInput } from '../components/atoms';
+import { Layout } from '../components/common';
+import { FormItem } from '../components/molecules';
 import { LOGIN_ERROR_MESSAGES } from '../shared/enums';
 import { IUserLoginRequestForm, useUserContext } from '../shared/hooks/useUserContext';
 
@@ -23,32 +25,34 @@ const schema = yup.object().shape({
 
 const LoginPage: NextPage<Props> = () => {
   const router = useRouter();
-  const { isLoading, isLoggedIn, loginUser } = useUserContext();
+  const userContext = useUserContext();
   const { handleSubmit, register, errors } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
-  const onSubmit: SubmitHandler<FormValues> = (data: IUserLoginRequestForm) => loginUser(data);
+  const onSubmit: SubmitHandler<FormValues> = (data: IUserLoginRequestForm) => userContext.loginUser(data);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (userContext.isLoggedIn) {
       router.push('/');
     }
-  }, [isLoggedIn]);
+  }, [userContext.isLoggedIn]);
 
-  if (isLoading) {
+  if (userContext.isLoading) {
     return <div>Loading ...</div>;
   }
 
   return (
-    <Layout>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input name="email" defaultValue="" ref={register} />
-        <p>{errors.email?.message}</p>
-        <input name="password" defaultValue="" ref={register} />
-        <p>{errors.password?.message}</p>
-        <input type="submit" />
-      </form>
+    <Layout title={'Login Page'} {...userContext}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormItem label={'Email'} errors={errors.email?.message}>
+          <TextInput name={'email'} register={register} />
+        </FormItem>
+        <FormItem label={'Password'} errors={errors.password?.message}>
+          <TextInput name={'password'} register={register} />
+        </FormItem>
+        <Button type="submit" text="login" />
+      </Form>
     </Layout>
   );
 };
