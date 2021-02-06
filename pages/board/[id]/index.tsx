@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useSWR from 'swr';
 
 import { Button, CLink } from '../../../components/atoms';
@@ -33,6 +33,12 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
     initialData: initialBoard
   });
 
+  useEffect(() => {
+    if (!data) {
+      router.push('/board');
+    }
+  }, [data]);
+
   return (
     <Layout title="About | Next.js + TypeScript Example" {...userContext}>
       <h1>About</h1>
@@ -54,7 +60,7 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
           onClick={() =>
             baseDeleteAPI(`${BOARD_URI.BASE}/${data?.id}`, () => {
               mutate();
-              router.push('/board');
+              router.back();
             })
           }
           text={'Delete'}

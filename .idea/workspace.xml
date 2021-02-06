@@ -11,14 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/shared/utils/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared/utils/removeHtmlTags.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/create.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/create.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +82,7 @@
       <workItem from="1612332988824" duration="2993000" />
       <workItem from="1612336345774" duration="18516000" />
       <workItem from="1612400820415" duration="8829000" />
+      <workItem from="1612567225961" duration="2828000" />
     </task>
     <servers />
   </component>
