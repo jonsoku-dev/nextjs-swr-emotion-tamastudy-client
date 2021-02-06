@@ -11,17 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/components/atoms/Tag/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/atoms/DynamicComponent/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/atoms/Typography/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/atoms/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/create.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/create.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/apis/board.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/board.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/apis/shared.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/shared.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/styles/shared.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/styles/shared.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/styles/theme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/styles/theme.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +83,7 @@
       <workItem from="1612332988824" duration="2993000" />
       <workItem from="1612336345774" duration="18516000" />
       <workItem from="1612400820415" duration="8829000" />
-      <workItem from="1612567225961" duration="6326000" />
+      <workItem from="1612567225961" duration="10399000" />
     </task>
     <servers />
   </component>
@@ -112,6 +107,10 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3519" y="659" key="#ESLint/0.25.5120.1415@0.25.5120.1415" timestamp="1612239374651" />
+    <state x="304" y="196" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612621859975">
+      <screen x="0" y="25" width="1680" height="1025" />
+    </state>
+    <state x="304" y="196" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1680.1025@0.25.1680.1025" timestamp="1612621859975" />
     <state x="3591" y="524" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1612493080122">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
@@ -128,9 +127,10 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="2225" y="78" width="1631" height="1212" key="SettingsEditor/0.25.5120.1415@0.25.5120.1415" timestamp="1612615041614" />
-    <state width="500" height="445" key="SwitcherDM" timestamp="1612614979092">
-      <screen x="0" y="25" width="5120" height="1415" />
+    <state width="500" height="400" key="SwitcherDM" timestamp="1612621361785">
+      <screen x="0" y="25" width="1680" height="1025" />
     </state>
+    <state width="500" height="400" key="SwitcherDM/0.25.1680.1025@0.25.1680.1025" timestamp="1612621361785" />
     <state width="500" height="445" key="SwitcherDM/0.25.5120.1415@0.25.5120.1415" timestamp="1612614979092" />
     <state x="3231" y="644" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1612540818652">
       <screen x="0" y="25" width="5120" height="1415" />
@@ -140,10 +140,11 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612584206924" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612540425790">
-      <screen x="0" y="25" width="5120" height="1415" />
+    <state x="1010" y="259" width="670" height="490" key="search.everywhere.popup" timestamp="1612621990636">
+      <screen x="0" y="25" width="1680" height="1025" />
     </state>
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612540425790" />
+    <state x="1010" y="259" width="670" height="490" key="search.everywhere.popup/0.25.1680.1025@0.25.1680.1025" timestamp="1612621990636" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612615941567" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import useSWR from 'swr';
 
-import { CLink, Tag } from '../../components/atoms';
+import { CLink } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { IBoardPaging } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
