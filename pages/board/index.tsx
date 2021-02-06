@@ -11,7 +11,7 @@ import { CLink } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { IBoardPaging } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
-import { useBoards, useUserContext } from '../../shared/hooks';
+import { useUserContext } from '../../shared/hooks';
 import { getAsString } from '../../shared/utils/getAsString';
 import { InitialUserProps } from '../_app';
 
@@ -24,8 +24,6 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
   const [serverQuery] = useState(query);
 
   const userContext = useUserContext();
-  // const { data } = useBoards(initialBoards);
-  console.log(BOARD_URI.BASE + '?' + stringify(query));
   const { data } = useSWR(BOARD_URI.BASE + '?' + stringify(query), {
     dedupingInterval: 15000,
     initialData: deepEqual(query, serverQuery) ? initialBoards : undefined
@@ -38,14 +36,14 @@ const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
       <CLink href={'/board/create'}>Create Board</CLink>
       {data?.content?.map((board) => {
         return (
-          <li key={board.id}>
+          <li key={board.boardId}>
             <Link
               href={{
                 pathname: '/board/[id]',
-                query: { id: board.id }
+                query: { id: board.boardId }
               }}>
               <a>
-                <span>{`${board.title}: ${board.id}`}</span>
+                <span>{`${board.title}: ${board.boardId}`}</span>
               </a>
             </Link>
           </li>

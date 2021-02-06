@@ -1,13 +1,14 @@
-import { ICategory } from './category';
 import { BasePaging } from './shared';
-import { IUser } from './user';
 
 export interface IBoard {
-  id: number;
+  boardId: number;
   title: string;
   description: string;
-  user: IUser;
-  category: ICategory;
+  userId: number;
+  username: string;
+  email: string;
+  categoryId: number;
+  categoryName: string;
   createdAt: string;
   updatedAt: string;
 }

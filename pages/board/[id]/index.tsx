@@ -43,6 +43,9 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
     <Layout title="About | Next.js + TypeScript Example" {...userContext}>
       <h1>About</h1>
       <p>This is the {boardId} page</p>
+      <p>
+        {data?.userId} 번 {data?.email} 손님
+      </p>
       <div>
         <div
           css={css`
@@ -58,14 +61,14 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
         </div>
         <Button
           onClick={() =>
-            baseDeleteAPI(`${BOARD_URI.BASE}/${data?.id}`, () => {
+            baseDeleteAPI(`${BOARD_URI.BASE}/${data?.boardId}`, () => {
               mutate();
               router.back();
             })
           }
           text={'Delete'}
         />
-        <CLink href={`/board/${data?.id}/edit`}>edit</CLink>
+        <CLink href={`/board/${data?.boardId}/edit`}>edit</CLink>
         <CLink href="/board">Go to Board</CLink>
       </div>
     </Layout>

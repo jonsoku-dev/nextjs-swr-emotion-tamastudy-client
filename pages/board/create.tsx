@@ -11,7 +11,7 @@ import * as yup from 'yup';
 import { Button, Form, Select, TextInput } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { FormItem } from '../../components/molecules';
-import { basePostAPI, IBoardCreateRequest, ICategory } from '../../shared/apis';
+import { basePostAPI, IBoard, IBoardCreateRequest, ICategory } from '../../shared/apis';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../shared/enums';
 import { useBoards, useCategory, useUserContext } from '../../shared/hooks';
 
@@ -52,16 +52,10 @@ const CreateBoardPage: NextPage<Props> = () => {
   });
 
   const onSubmit = useCallback(
-    (form: IBoardCreateRequest) => {
-      basePostAPI(
-        BOARD_URI.BASE,
-        form,
-        () => {
-          mutate();
-          router.push('/board');
-        },
-        () => alert('보드 생성 에러')
-      );
+    async (form: IBoardCreateRequest) => {
+      await basePostAPI<IBoardCreateRequest, IBoard>(BOARD_URI.BASE, form);
+      await mutate();
+      await router.push('/board');
     },
     [mutate]
   );

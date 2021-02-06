@@ -27,33 +27,27 @@ export interface BasePaging<T> {
   empty: boolean;
 }
 
-export const basePostAPI = async (
+export const basePostAPI = async <RequestBody, ResponseBody>(
   url: string,
-  body: any,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
+  body: RequestBody
+): Promise<ResponseBody | undefined> => {
   try {
-    await axios.post(url, body);
-    onSuccess && onSuccess();
-    return;
+    const res = await axios.post(url, body);
+    return res.data as ResponseBody;
   } catch (e) {
-    onError && onError();
+    console.log(e);
   }
 };
 
-export const basePatchAPI = async (
+export const basePatchAPI = async <RequestBody, ResponseBody>(
   url: string,
-  body: any,
-  onSuccess: () => void,
-  onError: () => void
-): Promise<void> => {
+  body: RequestBody
+): Promise<ResponseBody | undefined> => {
   try {
-    await axios.patch(url, body);
-    onSuccess && onSuccess();
-    return;
+    const res = await axios.patch(url, body);
+    return res.data as ResponseBody;
   } catch (e) {
-    onError && onError();
+    console.log(e);
   }
 };
 
