@@ -8,4 +8,5 @@ export * from './Header';
 export * from './HoverMenu';
 export * from './Label';
 export * from './Select';
+export * from './Tag';
 export * from './TextInput';

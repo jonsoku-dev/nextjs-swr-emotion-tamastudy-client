@@ -11,6 +11,7 @@ export const GlobalStyle = (props: any) => (
         -webkit-text-size-adjust: 100%;
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
+        font-size: 62.5%;
       }
       body {
         margin: 0;
