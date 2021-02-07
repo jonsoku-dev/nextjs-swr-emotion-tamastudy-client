@@ -1,15 +1,17 @@
 import Head from 'next/head';
 import React, { ReactNode } from 'react';
+import { FaUserCircle } from 'react-icons/fa';
 
 import { IUserContext } from '../../../shared/hooks/useUserContext';
 import { CLink, Container, FlexBox, Header } from '../../atoms';
+import { Dropdown } from '../../molecules/Dropdown';
 
 interface Props extends IUserContext {
   title: string;
   children?: ReactNode;
 }
 
-export const Layout: React.FC<Props> = ({ title = 'This is the default title', user, isLoggedIn, children }) => {
+export const Layout: React.FC<Props> = ({ title = 'This is the default title', isLoggedIn, children }) => {
   return (
     <div>
       <Head>
@@ -21,16 +23,15 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', u
         <Container>
           <FlexBox el={'nav'} vertical={'flex-end'}>
             {isLoggedIn ? (
-              <>
-                <span>Hello {user?.username}</span>
-                <CLink href={'/logout'}>Logout</CLink>
-                {/*<Button onClick={() => logoutUser()} text={'Logout'} />*/}
-              </>
+              <Dropdown button={<FaUserCircle size={'2rem'} />} menus={[{ text: 'logout', url: '/logout' }]} />
             ) : (
-              <>
-                <CLink href={'/login'}>Login</CLink>
-                <CLink href={'/join'}>Join Us</CLink>
-              </>
+              <Dropdown
+                button={<FaUserCircle size={'2rem'} />}
+                menus={[
+                  { text: 'login', url: '/login' },
+                  { text: 'join', url: '/join' }
+                ]}
+              />
             )}
           </FlexBox>
           <FlexBox>
