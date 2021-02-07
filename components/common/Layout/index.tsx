@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import React, { ReactNode } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
 
-import { IUserContext } from '../../../shared/hooks/useUserContext';
-import { CLink, Container, FlexBox, Header } from '../../atoms';
-import { Dropdown } from '../../molecules/Dropdown';
+import { IUserContext } from '../../../shared/hooks';
+import { Container } from '../../atoms';
+import { Auth } from '../../organisms/Auth';
+import { MainNav } from '../../organisms/MainNav';
 
 interface Props extends IUserContext {
   title: string;
@@ -21,26 +21,8 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', i
       </Head>
       <header>
         <Container>
-          <FlexBox el={'nav'} vertical={'flex-end'}>
-            {isLoggedIn ? (
-              <Dropdown button={<FaUserCircle size={'2rem'} />} menus={[{ text: '로그아웃', url: '/logout' }]} />
-            ) : (
-              <Dropdown
-                button={<FaUserCircle size={'2rem'} />}
-                menus={[
-                  { text: '로그인', url: '/login' },
-                  { text: '회원가입', url: '/join' }
-                ]}
-              />
-            )}
-          </FlexBox>
-          <FlexBox>
-            <Header>Hello World!</Header>
-          </FlexBox>
-          <FlexBox el={'nav'}>
-            <CLink href={'/'}>Home</CLink>
-            <CLink href={'/board'}>Board</CLink>
-          </FlexBox>
+          <Auth isLoggedIn={isLoggedIn} />
+          <MainNav />
         </Container>
       </header>
       <Container el={'main'}>{children}</Container>

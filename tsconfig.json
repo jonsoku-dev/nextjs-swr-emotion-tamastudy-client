@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "jsxImportSource": "@emotion/react"
+    "jsxImportSource": "@emotion/react",
+    "types": ["@emotion/react/types/css-prop"]
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]

@@ -2,10 +2,10 @@ import { css, Global } from '@emotion/react';
 import emotionReset from 'emotion-reset';
 import React from 'react';
 
-export const GlobalStyle = (props: any) => (
+export const GlobalStyle = () => (
   <Global
-    {...props}
     styles={css`
+      @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
       ${emotionReset}
       *, *::after, *::before {
         box-sizing: border-box;
@@ -14,7 +14,6 @@ export const GlobalStyle = (props: any) => (
         font-smoothing: antialiased;
       }
       html {
-        font-family: sans-serif;
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
         -webkit-font-smoothing: antialiased;

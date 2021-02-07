@@ -8,6 +8,7 @@ export * from './Form';
 export * from './Header';
 export * from './HoverMenu';
 export * from './Label';
+export * from './Logo';
 export * from './Select';
 export * from './Tag';
 export * from './TextInput';

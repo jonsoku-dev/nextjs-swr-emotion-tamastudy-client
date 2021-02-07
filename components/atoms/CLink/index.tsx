@@ -3,10 +3,11 @@ import Link, { LinkProps } from 'next/link';
 import React from 'react';
 
 interface Props extends LinkProps {
+  fontSize?: string;
   position?: 'left' | 'center' | 'right';
 }
 
-export const CLink: React.FC<Props> = ({ position = 'center', children, ...rest }) => {
+export const CLink: React.FC<Props> = ({ fontSize = '1.2rem', position = 'center', children, ...rest }) => {
   const theme = useTheme();
   return (
     <Link {...rest}>
@@ -17,6 +18,7 @@ export const CLink: React.FC<Props> = ({ position = 'center', children, ...rest 
           justify-content: ${position === 'left' ? 'flex-start' : position === 'right' ? 'flex-end' : position};
           align-items: center;
           padding: ${theme.space}px;
+          ${fontSize && `font-size: ${fontSize}`};
         `}>
         {children}
       </a>
