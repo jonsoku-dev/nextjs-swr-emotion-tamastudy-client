@@ -23,13 +23,13 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', i
         <Container>
           <FlexBox el={'nav'} vertical={'flex-end'}>
             {isLoggedIn ? (
-              <Dropdown button={<FaUserCircle size={'2rem'} />} menus={[{ text: 'logout', url: '/logout' }]} />
+              <Dropdown button={<FaUserCircle size={'2rem'} />} menus={[{ text: '로그아웃', url: '/logout' }]} />
             ) : (
               <Dropdown
                 button={<FaUserCircle size={'2rem'} />}
                 menus={[
-                  { text: 'login', url: '/login' },
-                  { text: 'join', url: '/join' }
+                  { text: '로그인', url: '/login' },
+                  { text: '회원가입', url: '/join' }
                 ]}
               />
             )}
