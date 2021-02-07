@@ -1,10 +1,18 @@
 import { css, Global } from '@emotion/react';
+import emotionReset from 'emotion-reset';
 import React from 'react';
 
 export const GlobalStyle = (props: any) => (
   <Global
     {...props}
     styles={css`
+      ${emotionReset}
+      *, *::after, *::before {
+        box-sizing: border-box;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+      }
       html {
         font-family: sans-serif;
         -ms-text-size-adjust: 100%;
