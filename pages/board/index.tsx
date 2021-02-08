@@ -1,14 +1,14 @@
 import deepEqual from 'fast-deep-equal';
 import { GetServerSideProps, NextPage } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { stringify } from 'querystring';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import useSWR from 'swr';
 
-import { CLink } from '../../components/atoms';
+import { Button, FlexBox } from '../../components/atoms';
 import { Layout } from '../../components/common';
+import { BaseCard } from '../../components/organisms/BaseCard';
 import { IBoardPaging } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import { useUserContext } from '../../shared/hooks';
@@ -22,33 +22,35 @@ export interface IndexProps extends InitialUserProps {
 const BoardIndexPage: NextPage<IndexProps> = ({ initialBoards }) => {
   const { query, push } = useRouter();
   const [serverQuery] = useState(query);
-
   const userContext = useUserContext();
+
   const { data } = useSWR(BOARD_URI.BASE + '?' + stringify(query), {
     dedupingInterval: 15000,
     initialData: deepEqual(query, serverQuery) ? initialBoards : undefined
   });
 
-  console.log(data);
+  const onClickCreate = useCallback(() => {
+    push('/board/create');
+  }, []);
 
   return (
     <Layout title="Home | Next.js + TypeScript Example" {...userContext}>
-      <CLink href={'/board/create'}>Create Board</CLink>
-      {data?.content?.map((board) => {
-        return (
-          <li key={board.boardId}>
-            <Link
-              href={{
-                pathname: '/board/[id]',
-                query: { id: board.boardId }
-              }}>
-              <a>
-                <span>{`${board.title}: ${board.boardId}`}</span>
-              </a>
-            </Link>
-          </li>
-        );
-      })}
+      <FlexBox vertical={'flex-end'}>
+        <Button text={'CREATE'} onClick={onClickCreate} />
+      </FlexBox>
+      <div>
+        {data?.content?.map((board) => {
+          return (
+            <BaseCard
+              key={board.boardId}
+              title={board.title}
+              author={board.username}
+              commentCount={0}
+              url={`/board/${board.boardId}`}
+            />
+          );
+        })}
+      </div>
       <ReactPaginate
         previousLabel={'previous'}
         nextLabel={'next'}

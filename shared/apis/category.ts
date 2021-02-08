@@ -1,6 +1,9 @@
 export interface ICategory {
-  id: number;
+  categoryId: number;
   name: string;
-  createdAt: string;
-  updatedAt: string;
 }
+
+export interface ICategoryCreateRequest {
+  name: string;
+}
+export interface ICategoryUpdateRequest extends Partial<ICategoryCreateRequest> {}

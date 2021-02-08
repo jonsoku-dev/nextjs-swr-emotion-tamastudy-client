@@ -11,6 +11,7 @@ export const Label: React.FC<Props> = ({ children }) => {
         display: flex;
         font-weight: 600;
         margin-bottom: ${theme.space}px;
+        font-size: 1.6rem;
       `}>
       {children}
     </label>

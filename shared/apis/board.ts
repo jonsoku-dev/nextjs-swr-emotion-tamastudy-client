@@ -1,16 +1,15 @@
+import { ICategory } from './category';
+import { IComment } from './comment';
 import { BasePaging } from './shared';
+import { IUser } from './user';
 
-export interface IBoard {
+export interface IBoard extends ICategory, IUser {
   boardId: number;
   title: string;
   description: string;
-  userId: number;
-  username: string;
-  email: string;
-  categoryId: number;
-  categoryName: string;
   createdAt: string;
   updatedAt: string;
+  comments: IComment[];
 }
 
 export type IBoardPaging = BasePaging<IBoard>;
@@ -20,8 +19,5 @@ export interface IBoardCreateRequest {
   description: string;
   categoryId: number;
 }
-export interface IBoardUpdateRequest {
-  title?: string;
-  description?: string;
-  categoryId?: number;
-}
+
+export interface IBoardUpdateRequest extends Partial<IBoardCreateRequest> {}

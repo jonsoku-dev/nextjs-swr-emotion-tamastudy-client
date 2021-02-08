@@ -23,6 +23,7 @@ export const GlobalStyle = () => (
       body {
         margin: 0;
         font-family: 'Roboto', 'HelveticaNeue', 'Helvetica Neue', sans-serif;
+        background-color: #f2f2f2;
       }
     `}
   />

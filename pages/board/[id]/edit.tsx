@@ -50,16 +50,10 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
   });
 
   const onSubmit = useCallback(
-    (form: IBoardUpdateRequest) => {
-      basePatchAPI(
-        `${BOARD_URI.BASE}/${boardId}`,
-        form,
-        () => {
-          mutate();
-          router.push(`/board/${boardId}`);
-        },
-        () => alert('보드 생성 에러')
-      );
+    async (form: IBoardUpdateRequest) => {
+      await basePatchAPI(`${BOARD_URI.BASE}/${boardId}`, form);
+      await mutate();
+      await router.push(`/board/${boardId}`);
     },
     [mutate, boardId]
   );
@@ -70,9 +64,9 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
         <FormItem label={'Category'} errors={errors.categoryId?.message}>
           <Select<ICategory>
             name="categoryId"
-            defaultValue={data?.category?.id}
+            defaultValue={data?.categoryId}
             options={categories}
-            value={'id'}
+            value={'categoryId'}
             text={'name'}
             register={register}
           />

@@ -64,7 +64,13 @@ const CreateBoardPage: NextPage<Props> = () => {
     <Layout title="create board page" {...userContext}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormItem label={'Category'} errors={errors.categoryId?.message}>
-          <Select<ICategory> name="categoryId" options={categories} value={'id'} text={'name'} register={register} />
+          <Select<ICategory>
+            name="categoryId"
+            options={categories}
+            value={'categoryId'}
+            text={'name'}
+            register={register}
+          />
         </FormItem>
         <FormItem label={'Title'} errors={errors.title?.message}>
           <TextInput name={'title'} register={register} />

@@ -22,6 +22,9 @@ export const Select = <O extends { [key: string]: any }>({
   if (!options) {
     return null;
   }
+  console.log(options);
+  console.log(value);
+
   return (
     <select name={name} ref={register} css={css``} defaultValue={defaultValue} {...rest}>
       {options?.map((op) => (

@@ -6,6 +6,7 @@ interface Props {
   vertical?: CSSObject['justifyContent'];
   horizontal?: CSSObject['justifyItems'];
   el?: ComponentType | keyof JSX.IntrinsicElements;
+  gap?: number;
 }
 
 export const FlexBox: React.FC<Props> = ({
@@ -13,6 +14,7 @@ export const FlexBox: React.FC<Props> = ({
   vertical = 'center',
   horizontal = 'center',
   el: Wrapper = 'div',
+  gap = 0,
   children,
   ...rest
 }) => {
@@ -23,6 +25,7 @@ export const FlexBox: React.FC<Props> = ({
         flex-direction: ${direction};
         justify-content: ${vertical};
         justify-items: ${horizontal};
+        gap: ${gap}px;
       `}
       {...rest}>
       {children}

@@ -11,21 +11,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/components/atoms/Logo/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/organisms/Auth/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/organisms/MainNav/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/organisms/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/InfoLabel/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/BaseCard/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/BaseComment/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shared/apis/comment.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/atoms/CLink/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/CLink/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/atoms/DynamicComponent/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/DynamicComponent/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/atoms/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/common/Layout/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/common/Layout/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/Dropdown/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/Dropdown/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/Button/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Button/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/FlexBox/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/FlexBox/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/Label/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Label/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/Select/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Select/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/Typography/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Typography/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/create.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/create.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/apis/board.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/board.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/apis/category.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/category.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/apis/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/user.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/styles/shared.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/styles/shared.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,11 +76,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/components/molecules" />
       <recent name="$PROJECT_DIR$/pages/board/[id]" />
       <recent name="$PROJECT_DIR$/components/molecules/FormItem" />
       <recent name="$PROJECT_DIR$/components/atoms/TextInput" />
       <recent name="$PROJECT_DIR$/components/atoms/Label" />
-      <recent name="$PROJECT_DIR$/components/atoms/Button" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/shared/hooks" />
@@ -93,7 +100,7 @@
       <workItem from="1612336345774" duration="18516000" />
       <workItem from="1612400820415" duration="8829000" />
       <workItem from="1612567225961" duration="16299000" />
-      <workItem from="1612664295436" duration="6891000" />
+      <workItem from="1612664295436" duration="25549000" />
     </task>
     <servers />
   </component>
@@ -137,24 +144,24 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="2225" y="78" width="1631" height="1212" key="SettingsEditor/0.25.5120.1415@0.25.5120.1415" timestamp="1612615041614" />
-    <state width="500" height="445" key="SwitcherDM" timestamp="1612667781960">
-      <screen x="0" y="25" width="5120" height="1415" />
+    <state width="500" height="400" key="SwitcherDM" timestamp="1612708990651">
+      <screen x="0" y="25" width="1680" height="1025" />
     </state>
-    <state width="500" height="400" key="SwitcherDM/0.25.1680.1025@0.25.1680.1025" timestamp="1612621361785" />
+    <state width="500" height="400" key="SwitcherDM/0.25.1680.1025@0.25.1680.1025" timestamp="1612708990651" />
     <state width="500" height="445" key="SwitcherDM/0.25.5120.1415@0.25.5120.1415" timestamp="1612667781960" />
     <state x="3231" y="644" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1612540818652">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3231" y="644" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.5120.1415@0.25.5120.1415" timestamp="1612540818652" />
-    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1612688163540">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1612774922078">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612688163540" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612689359192">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612774922078" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1612803147785">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="1010" y="259" width="670" height="490" key="search.everywhere.popup/0.25.1680.1025@0.25.1680.1025" timestamp="1612621990636" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612689359192" />
+    <state x="1010" y="259" width="670" height="490" key="search.everywhere.popup/0.25.1680.1025@0.25.1680.1025" timestamp="1612705081573" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1612803147785" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
