@@ -1,14 +1,13 @@
 import Head from 'next/head';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
-import { IUserContext } from '../../../shared/hooks';
 import { Container } from '../../atoms';
 import { Auth } from '../../organisms/Auth';
 import { MainNav } from '../../organisms/MainNav';
 
-interface Props extends IUserContext {
-  title: string;
-  children?: ReactNode;
+interface Props {
+  title?: string;
+  isLoggedIn: boolean;
 }
 
 export const Layout: React.FC<Props> = ({ title = 'This is the default title', isLoggedIn, children }) => {

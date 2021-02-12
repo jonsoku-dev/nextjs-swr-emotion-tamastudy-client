@@ -1,24 +1,42 @@
 import { GetServerSideProps, NextPage } from 'next';
-import React from 'react';
 
+import { Layout } from '../components/common/Layout';
+import useUser from '../shared/hooks/useUser';
 import withSession from '../shared/session';
 
 interface Props {}
 
 const LoginPage: NextPage<Props> = () => {
-  return <div>LoginPage</div>;
+  const { user, login } = useUser({
+    redirectTo: '/',
+    redirectIfFound: true
+  });
+
+  return (
+    <Layout isLoggedIn={user?.isLoggedIn}>
+      <button
+        onClick={() =>
+          login({
+            email: 'the2792@gmail.com',
+            password: '1234'
+          })
+        }>
+        onClickLogin
+      </button>
+    </Layout>
+  );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req }) => {
   const initialUser = req.session.get('initialUser');
 
-  console.log(initialUser, 'initialUser index');
-
   if (initialUser) {
-    res.setHeader('location', '/');
-    res.statusCode = 302;
-    res.end();
-    return { props: {} };
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/'
+      }
+    };
   }
 
   return {

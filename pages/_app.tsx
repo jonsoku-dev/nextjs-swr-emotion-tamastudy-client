@@ -3,7 +3,6 @@ import { AppProps } from 'next/app';
 import React from 'react';
 import { SWRConfig } from 'swr';
 
-import { Layout } from '../components/common/Layout';
 import { GlobalStyle } from '../shared/styles';
 import theme from '../shared/styles/theme';
 import fetcher from '../shared/utils/fetcher';
@@ -22,9 +21,7 @@ const App = ({ Component, pageProps }: AppProps & InitialProps) => {
       }}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Component {...pageProps} />
       </ThemeProvider>
     </SWRConfig>
   );
