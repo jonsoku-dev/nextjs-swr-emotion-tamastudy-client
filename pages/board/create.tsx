@@ -5,13 +5,13 @@ import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, Form, Select, TextInput } from '../../components/atoms';
+import { Button, HForm, HInput, HSelect } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { FormItem } from '../../components/molecules';
-import { basePostAPI, IBoard, IBoardCreateRequest, ICategory } from '../../shared/apis';
+import { basePostAPI, IBoard, IBoardCreateRequest } from '../../shared/apis';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../shared/enums';
 import { useBoards, useCategory, useUserContext } from '../../shared/hooks';
 
@@ -20,6 +20,12 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 });
 
 interface Props {}
+
+type FormValues = {
+  title: string;
+  description: string;
+  categoryId: number;
+};
 
 const schema = yup.object().shape({
   title: yup
@@ -31,7 +37,9 @@ const schema = yup.object().shape({
     .string()
     .typeError(BOARD_ERROR_MESSAGES.STRING_TYPE)
     .max(2000, BOARD_ERROR_MESSAGES.MAX_LENGTH_DESCRIPTION)
-    .test('validate-description', BOARD_ERROR_MESSAGES.REQUIRED_DESCRIPTION, (value) => value !== '<p><br></p>')
+    .test('validate-description', BOARD_ERROR_MESSAGES.REQUIRED_DESCRIPTION, (value) => {
+      return value !== '<p><br></p>';
+    })
     .required(BOARD_ERROR_MESSAGES.REQUIRED_DESCRIPTION),
   categoryId: yup
     .number()
@@ -46,13 +54,9 @@ const CreateBoardPage: NextPage<Props> = () => {
   const { mutate } = useBoards();
   const { data: categories } = useCategory();
 
-  const { handleSubmit, register, errors, control } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(schema)
-  });
-
   const onSubmit = useCallback(
     async (form: IBoardCreateRequest) => {
+      console.log(form);
       await basePostAPI<IBoardCreateRequest, IBoard>(BOARD_URI.BASE, form);
       await mutate();
       await router.push('/board');
@@ -62,31 +66,33 @@ const CreateBoardPage: NextPage<Props> = () => {
 
   return (
     <Layout title="create board page" {...userContext}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormItem label={'Category'} errors={errors.categoryId?.message}>
-          <Select<ICategory>
-            name="categoryId"
-            options={categories}
-            value={'categoryId'}
-            text={'name'}
-            register={register}
-          />
-        </FormItem>
-        <FormItem label={'Title'} errors={errors.title?.message}>
-          <TextInput name={'title'} register={register} />
-        </FormItem>
-        <FormItem label={'Description'} errors={errors.description?.message}>
-          <Controller
-            control={control}
-            name="description"
-            defaultValue=""
-            render={({ onChange, value }) => (
-              <QuillNoSSRWrapper theme="snow" value={value} onChange={onChange} defaultValue="" />
-            )}
-          />
-        </FormItem>
-        <Button type="submit" text="create" />
-      </Form>
+      <HForm<FormValues> onSubmit={onSubmit} resolver={yupResolver(schema)}>
+        {({ register, errors, control }) => (
+          <>
+            <FormItem label={'Category'} errors={errors.categoryId?.message}>
+              <HSelect
+                name="categoryId"
+                ref={register}
+                options={categories?.map((c) => ({ id: c.categoryId, value: c.categoryId, label: c.name }))}
+              />
+            </FormItem>
+            <FormItem label={'Title'} errors={errors.title?.message}>
+              <HInput name={'title'} ref={register} />
+            </FormItem>
+            <FormItem label={'Description'} errors={errors.description?.message}>
+              <Controller
+                control={control}
+                name="description"
+                defaultValue=""
+                render={({ onChange, value }) => (
+                  <QuillNoSSRWrapper theme="snow" value={value} onChange={onChange} defaultValue="" />
+                )}
+              />
+            </FormItem>
+            <Button type="submit" text="create" />
+          </>
+        )}
+      </HForm>
     </Layout>
   );
 };

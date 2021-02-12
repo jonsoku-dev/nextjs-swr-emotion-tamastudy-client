@@ -1,5 +1,4 @@
 import { ICategory } from './category';
-import { IComment } from './comment';
 import { BasePaging } from './shared';
 import { IUser } from './user';
 
@@ -9,7 +8,6 @@ export interface IBoard extends ICategory, IUser {
   description: string;
   createdAt: string;
   updatedAt: string;
-  comments: IComment[];
 }
 
 export type IBoardPaging = BasePaging<IBoard>;

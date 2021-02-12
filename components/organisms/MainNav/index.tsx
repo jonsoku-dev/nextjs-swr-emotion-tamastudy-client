@@ -12,7 +12,13 @@ export const MainNav: React.FC<Props> = () => {
       <CLink href={'/'}>
         <H4>HOME</H4>
       </CLink>
-      <CLink href={'/board'}>
+      <CLink
+        href={{
+          pathname: '/board',
+          query: {
+            page: 0
+          }
+        }}>
         <H4>BOARD</H4>
       </CLink>
     </FlexBox>

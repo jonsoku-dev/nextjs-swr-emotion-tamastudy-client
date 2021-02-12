@@ -28,6 +28,7 @@
     "immer": "^8.0.1",
     "lodash": "^4.17.20",
     "next": "latest",
+    "next-iron-session": "^4.1.11",
     "next-redux-wrapper": "^6.0.2",
     "nookies": "^2.5.2",
     "react": "^16.9.0",

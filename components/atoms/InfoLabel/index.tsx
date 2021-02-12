@@ -15,20 +15,22 @@ export const InfoLabel: React.FC<Props> = ({ label, value }) => {
       css={css`
         display: inline-flex;
         & span:not(:first-of-type) {
-          margin-left: ${theme.space}px;
+          margin-left: ${theme.space / 2}px;
         }
         & span:not(:last-of-type) {
-          margin-right: ${theme.space}px;
+          margin-right: ${theme.space / 2}px;
         }
       `}>
       <Body2
         el={'span'}
         css={css`
           color: #353535;
+          font-weight: 700;
         `}>
         {label}
       </Body2>
       <Body2
+        el={'span'}
         css={css`
           color: #353535;
         `}>

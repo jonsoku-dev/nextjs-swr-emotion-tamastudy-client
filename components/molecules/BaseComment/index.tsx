@@ -22,9 +22,10 @@ interface Props {
   comment: IComment;
   onClickEdit?: any;
   onClickDelete?: any;
+  show: boolean;
 }
 
-export const BaseComment: React.FC<Props> = ({ comment, onClickEdit, onClickDelete }) => {
+export const BaseComment: React.FC<Props> = ({ comment, onClickEdit, onClickDelete, show }) => {
   const [editMode, setEditMode] = useState(false);
 
   const { handleSubmit, register, errors } = useForm({
@@ -76,7 +77,7 @@ export const BaseComment: React.FC<Props> = ({ comment, onClickEdit, onClickDele
         `}>
         <FlexBox vertical={'space-between'}>
           <SubH2 el={'h2'}>{comment.username}</SubH2>
-          {!editMode && (
+          {!editMode && show && (
             <FlexBox gap={8}>
               <Button text={'Edit'} onClick={() => setEditMode(true)} />
               <Button

@@ -1,12 +1,15 @@
-import { css } from '@emotion/react';
 import React, { FormHTMLAttributes } from 'react';
 
-interface Props extends FormHTMLAttributes<HTMLFormElement> {}
+import { FlexBox } from '../FlexBox';
 
-export const Form: React.FC<Props> = ({ children, ...rest }) => {
+interface Props extends FormHTMLAttributes<HTMLFormElement> {
+  gap?: number;
+}
+
+export const Form: React.FC<Props> = ({ gap = 8, children, ...rest }) => {
   return (
-    <form css={css``} {...rest}>
+    <FlexBox el={'form'} direction={'column'} gap={gap} {...rest}>
       {children}
-    </form>
+    </FlexBox>
   );
 };

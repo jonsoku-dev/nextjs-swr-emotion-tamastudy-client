@@ -6,20 +6,17 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import * as yup from 'yup';
 
-import { Button, FlexBox, Form, H1, TextInput } from '../../../components/atoms';
+import { Button, FlexBox, H1, HForm, HInput } from '../../../components/atoms';
 import { Layout } from '../../../components/common';
-import { FormItem } from '../../../components/molecules/FormItem';
-import { InfoLabel } from '../../../components/molecules/InfoLabel';
-import { BaseComment } from '../../../components/organisms/BaseComment';
-import { baseDeleteAPI, basePatchAPI, basePostAPI, IBoard, IBoardCreateRequest } from '../../../shared/apis';
-import { ICommentCreateRequest } from '../../../shared/apis/comment';
+import { Buttons, FormItem, InfoLabels } from '../../../components/molecules';
+import { BaseComments } from '../../../components/organisms/BaseComments';
+import { baseDeleteAPI, basePatchAPI, basePostAPI, IBoard } from '../../../shared/apis';
+import { IComment } from '../../../shared/apis/comment';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../../shared/enums';
 import { useBoards, useUserContext } from '../../../shared/hooks';
-import theme from '../../../shared/styles/theme';
 import { getAsString } from '../../../shared/utils/getAsString';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
@@ -34,102 +31,128 @@ const schema = yup.object().shape({
     .required(BOARD_ERROR_MESSAGES.REQUIRED_TITLE)
 });
 
+interface FormValues {
+  text: string;
+}
+
 interface BoardPageProps {
   boardId: string;
   initialBoard: IBoard | null;
+  initialComments: IComment[] | null;
 }
 
-const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
+const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard, initialComments }) => {
   const router = useRouter();
-  const { mutate } = useBoards();
+  const { mutate: setBoards } = useBoards();
   const userContext = useUserContext();
 
-  const { data, mutate: setBoard } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
+  const { data: board } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
     dedupingInterval: 1500,
     initialData: initialBoard
   });
 
-  const onClickEdit = async (id: number, form: IBoardCreateRequest, cb: any) => {
-    await basePatchAPI(`${BOARD_URI.BASE}/${boardId}/comment/${id}`, form);
-    await setBoard();
-    cb();
-  };
-
-  const onClickDelete = async (id: string | number) => {
-    await baseDeleteAPI(`${BOARD_URI.BASE}/${boardId}/comment/${id}`);
-    await setBoard();
-  };
-
-  const { handleSubmit, register, errors, reset } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(schema)
+  const { data: comments, mutate: setComments } = useSWR(`${BOARD_URI.BASE}/${boardId}/comment`, {
+    dedupingInterval: 1500,
+    initialData: initialComments
   });
 
-  const onSubmit = useCallback(
-    async (form: ICommentCreateRequest) => {
-      await basePostAPI(`${BOARD_URI.BASE}/${boardId}/comment`, form);
-      await setBoard();
-      await reset();
+  const onClickDelete = useCallback(async () => {
+    try {
+      await baseDeleteAPI(`${BOARD_URI.BASE}/${boardId}`);
+      await setBoards();
+      router.push('/board');
+    } catch (e) {
+      alert(e);
+    }
+  }, [board]);
+
+  const onClickCommentCreate = useCallback(
+    async (form) => {
+      try {
+        await basePostAPI(`${BOARD_URI.BASE}/${boardId}/comment`, form);
+        await setComments();
+      } catch (e) {
+        alert(e);
+      }
     },
-    [data]
+    [comments]
+  );
+
+  const onClickCommentEdit = useCallback(
+    async (commentId, form, cb) => {
+      try {
+        await basePatchAPI(`${BOARD_URI.BASE}/${boardId}/comment/${commentId}`, form);
+        await setComments();
+        cb();
+      } catch (e) {
+        alert(e);
+      }
+    },
+    [board]
+  );
+
+  const onClickCommentDelete = useCallback(
+    async (commentId) => {
+      try {
+        await baseDeleteAPI(`${BOARD_URI.BASE}/${boardId}/comment/${commentId}`);
+        await setComments();
+      } catch (e) {
+        alert(e);
+      }
+    },
+    [board]
   );
 
   useEffect(() => {
-    if (!data) {
+    if (!board) {
       router.push('/board');
     }
-  }, [data]);
+  }, [board]);
+
+  const isAuthor = userContext.user?.userId === board?.userId;
 
   return (
     <Layout title="About | Next.js + TypeScript Example" {...userContext}>
-      <div>
-        <FlexBox
-          direction={'column'}
-          gap={theme.space * 2}
-          css={css`
-            .ql-container.ql-snow {
-              border: none;
-            }
-            .ql-editor {
-              padding: 0;
-            }
-          `}>
-          <H1>{data?.title}</H1>
-          <FlexBox direction={'column'} vertical={'flex-start'} gap={theme.space}>
-            <InfoLabel label={'작성자'} value={data?.username as string} />
-            <InfoLabel label={'작성일'} value={data?.createdAt as string} />
-            <InfoLabel label={'수정일'} value={data?.updatedAt as string} />
-          </FlexBox>
-          <QuillNoSSRWrapper modules={{ toolbar: false }} value={data?.description} readOnly={true} theme={'snow'} />
-        </FlexBox>
-        <Button
-          onClick={async () => {
-            await baseDeleteAPI(`${BOARD_URI.BASE}/${data?.boardId}`);
-            await mutate();
-            await router.push(`/board`);
-          }}
-          text={'Delete'}
+      <FlexBox direction={'column'} gap={24}>
+        <H1>{board?.title}</H1>
+        <InfoLabels
+          gap={16}
+          items={[
+            { label: '작성자', value: board?.username as string },
+            { label: '작성일', value: board?.createdAt as string },
+            { label: '수정일', value: board?.updatedAt as string }
+          ]}
         />
-        <Button onClick={() => router.push(`/board/${data?.boardId}/edit`)} text={'Edit'} />
-        <Button onClick={() => router.push(`/board`)} text={'List'} />
-      </div>
-      <div>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <FormItem label={''} errors={errors.text?.message}>
-            <TextInput name={'text'} register={register} defaultValue={''} />
-            <Button type={'submit'} text={'Create'} />
-          </FormItem>
-        </Form>
-      </div>
-      <FlexBox direction={'column'} gap={12}>
-        {data?.comments.map((comment) => (
-          <BaseComment
-            key={comment.commentId}
-            comment={comment}
-            onClickEdit={onClickEdit}
-            onClickDelete={onClickDelete}
-          />
-        ))}
+        <QuillNoSSRWrapper modules={{ toolbar: false }} value={board?.description} readOnly={true} theme={'snow'} />
+        <Buttons
+          gap={8}
+          items={[
+            { text: 'list', onClick: () => router.push(`/board`) },
+            { text: 'edit', onClick: () => router.push(`/board/${boardId}/edit`), show: isAuthor },
+            { text: 'delete', onClick: () => onClickDelete(), show: isAuthor }
+          ]}
+        />
+
+        <HForm<FormValues> onSubmit={onClickCommentCreate} resolver={yupResolver(schema)}>
+          {({ register, errors }) => (
+            <FlexBox vertical={'space-between'}>
+              <FormItem
+                errors={errors.text?.message}
+                css={css`
+                  flex: 1;
+                `}>
+                <HInput name={'text'} ref={register} />
+              </FormItem>
+              <Button type="submit" text="create" />
+            </FlexBox>
+          )}
+        </HForm>
+
+        <BaseComments
+          items={comments?.map((c) => ({ ...c, show: isAuthor }))}
+          onClickEdit={onClickCommentEdit}
+          onClickDelete={onClickCommentDelete}
+        />
       </FlexBox>
     </Layout>
   );
@@ -137,12 +160,16 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard }) => {
 
 export const getServerSideProps: GetServerSideProps<BoardPageProps> = async (ctx) => {
   const boardId = getAsString(ctx.query.id || '');
-  const [getBoard] = await Promise.all([fetch(`${BOARD_URI.BASE}/${boardId}`)]);
+  const [getBoard, getComments] = await Promise.all([
+    fetch(`${BOARD_URI.BASE}/${boardId}`),
+    fetch(`${BOARD_URI.BASE}/${boardId}/comment`)
+  ]);
 
   return {
     props: {
       boardId,
-      initialBoard: getBoard.ok ? await getBoard.json() : null
+      initialBoard: getBoard.ok ? await getBoard.json() : null,
+      initialComments: getComments.ok ? await getComments.json() : null
     }
   };
 };

@@ -13,9 +13,14 @@ export const Container: React.FC<Props & React.HTMLAttributes<HTMLOrSVGElement>>
   return (
     <Wrapper
       css={css`
-        width: 1100px;
+        width: 100%;
         height: auto;
         margin: 0 auto;
+        @media only screen and (min-width: 1024px) {
+          & {
+            width: 1100px;
+          }
+        }
       `}
       {...rest}>
       {children}

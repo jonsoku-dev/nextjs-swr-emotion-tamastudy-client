@@ -5,8 +5,8 @@ interface Props {
   direction?: CSSObject['flexDirection'];
   vertical?: CSSObject['justifyContent'];
   horizontal?: CSSObject['justifyItems'];
-  el?: ComponentType | keyof JSX.IntrinsicElements;
   gap?: number;
+  el?: ComponentType | keyof JSX.IntrinsicElements;
 }
 
 export const FlexBox: React.FC<Props> = ({

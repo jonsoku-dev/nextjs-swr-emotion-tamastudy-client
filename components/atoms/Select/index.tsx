@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 interface Props<O> {
@@ -19,14 +19,19 @@ export const Select = <O extends { [key: string]: any }>({
   defaultValue,
   ...rest
 }: Props<O> & { children?: ReactNode }) => {
+  const theme = useTheme();
   if (!options) {
     return null;
   }
-  console.log(options);
-  console.log(value);
-
   return (
-    <select name={name} ref={register} css={css``} defaultValue={defaultValue} {...rest}>
+    <select
+      name={name}
+      ref={register}
+      css={css`
+        padding: ${theme.space / 2}px ${theme.space}px ${theme.space / 2}px ${theme.space - 2}px;
+      `}
+      defaultValue={defaultValue}
+      {...rest}>
       {options?.map((op) => (
         <option key={op[value]} value={op[value]}>
           {op[text]}

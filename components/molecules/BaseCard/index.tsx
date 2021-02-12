@@ -4,17 +4,18 @@ import React, { useCallback } from 'react';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from 'react-icons/fa';
 
-import { Body, Body2 } from '../../atoms/Typography';
-import { InfoLabel } from '../../molecules';
+import { InfoLabel } from '../../atoms';
+import { Body2, H4 } from '../../atoms/Typography';
 
 interface Props {
+  id: number;
   title: string;
   author: string;
   commentCount: number;
   url?: string;
 }
 
-export const BaseCard: React.FC<Props> = ({ title, author, commentCount, url }) => {
+export const BaseCard: React.FC<Props> = ({ id, title, author, commentCount, url }) => {
   const theme = useTheme();
   const router = useRouter();
 
@@ -31,7 +32,6 @@ export const BaseCard: React.FC<Props> = ({ title, author, commentCount, url }) 
       css={css`
         width: 100%;
         background-color: #ffffff;
-        margin: ${theme.space * 2}px 0;
         padding: ${theme.space * 3}px;
         border-radius: 12px;
         display: flex;
@@ -40,7 +40,7 @@ export const BaseCard: React.FC<Props> = ({ title, author, commentCount, url }) 
       onClick={onClickCard}
       onKeyDown={onClickCard}
       role="button"
-      tabIndex={0}>
+      tabIndex={id}>
       {/* title, author */}
       <div
         css={css`
@@ -50,7 +50,7 @@ export const BaseCard: React.FC<Props> = ({ title, author, commentCount, url }) 
           justify-content: space-between;
           gap: ${theme.space * 2}px;
         `}>
-        <Body css={css``}>{title}</Body>
+        <H4>{title}</H4>
         <InfoLabel label={'작성자'} value={author} />
       </div>
       {/* icons */}

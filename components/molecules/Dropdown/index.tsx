@@ -18,7 +18,7 @@ interface Props {
 
 export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left', menuFontSize = '1.2rem' }) => {
   const theme = useTheme();
-  const dropdownRef = useRef<HTMLUListElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false);
   const onClick = useCallback(() => setIsActive(!isActive), [isActive]);
   return (
@@ -37,7 +37,7 @@ export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left'
         {button}
       </button>
       {isActive && (
-        <ul
+        <div
           ref={dropdownRef}
           css={css`
             z-index: 1000;
@@ -45,14 +45,14 @@ export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left'
             overflow: hidden;
             border: 1px solid #e1e1e1;
             position: absolute;
-            top: 100%;
+            top: 50%;
             text-align: center;
             white-space: nowrap;
             width: max-content;
             ${menuPosition === 'left' ? 'left : 0' : 'right: 0'}
           `}>
           {menus.map((menu, idx) => (
-            <li
+            <div
               key={idx}
               css={css`
                 background-color: #ffffff;
@@ -72,9 +72,9 @@ export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left'
                   {menu.text}
                 </span>
               </CLink>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

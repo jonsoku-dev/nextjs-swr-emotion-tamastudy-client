@@ -5,6 +5,7 @@ export type ThemeType = typeof light; // This is the type definition for my them
 export const light = {
   space: 8,
   primary: '#f45511',
+  lightRed: '#ff7235',
   text: '#000',
   background: '#fff',
   typography: {

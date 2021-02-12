@@ -2,8 +2,8 @@ import { css, useTheme } from '@emotion/react';
 import React, { ButtonHTMLAttributes } from 'react';
 
 interface IButtonColors {
-  bg: string;
-  text: string;
+  bg?: string;
+  text?: string;
 }
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,7 +18,7 @@ export const Button: React.FC<Props> = ({ text, onClick, colors, ...rest }) => {
     <button
       css={css`
         cursor: pointer;
-        padding: ${theme.space}px ${theme.space}px;
+        padding: ${theme.space}px;
         border-radius: 4px;
         transition: all 0.2s;
         text-transform: uppercase;

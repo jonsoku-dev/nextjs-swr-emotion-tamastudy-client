@@ -5,13 +5,13 @@ import { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, Form, Select, TextInput } from '../../../components/atoms';
+import { Button, HForm, HInput, HSelect } from '../../../components/atoms';
 import { Layout } from '../../../components/common';
 import { FormItem } from '../../../components/molecules';
-import { basePatchAPI, IBoard, IBoardUpdateRequest, ICategory } from '../../../shared/apis';
+import { basePatchAPI, IBoard, IBoardUpdateRequest } from '../../../shared/apis';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../../shared/enums';
 import { useBoard, useCategory, useUserContext } from '../../../shared/hooks';
 import { getAsString } from '../../../shared/utils/getAsString';
@@ -44,11 +44,6 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
 
   const { data: categories } = useCategory();
 
-  const { handleSubmit, register, errors, control } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(schema)
-  });
-
   const onSubmit = useCallback(
     async (form: IBoardUpdateRequest) => {
       await basePatchAPI(`${BOARD_URI.BASE}/${boardId}`, form);
@@ -60,32 +55,34 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
 
   return (
     <Layout title="edit board page" {...userContext}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormItem label={'Category'} errors={errors.categoryId?.message}>
-          <Select<ICategory>
-            name="categoryId"
-            defaultValue={data?.categoryId}
-            options={categories}
-            value={'categoryId'}
-            text={'name'}
-            register={register}
-          />
-        </FormItem>
-        <FormItem label={'Title'} errors={errors.title?.message}>
-          <TextInput name={'title'} register={register} defaultValue={data?.title} />
-        </FormItem>
-        <FormItem label={'Description'} errors={errors.description?.message}>
-          <Controller
-            control={control}
-            name="description"
-            defaultValue={data?.description}
-            render={({ onChange, value }) => (
-              <QuillNoSSRWrapper theme="snow" value={value} onChange={onChange} defaultValue={data?.description} />
-            )}
-          />
-        </FormItem>
-        <Button type="submit" text="edit" />
-      </Form>
+      <HForm<IBoardUpdateRequest> onSubmit={onSubmit} resolver={yupResolver(schema)}>
+        {({ register, errors, control }) => (
+          <>
+            <FormItem label={'Category'} errors={errors.categoryId?.message}>
+              <HSelect
+                defaultValue={data?.categoryId}
+                name="categoryId"
+                ref={register}
+                options={categories?.map((c) => ({ id: c.categoryId, value: c.categoryId, label: c.name }))}
+              />
+            </FormItem>
+            <FormItem label={'Title'} errors={errors.title?.message}>
+              <HInput name={'title'} ref={register} defaultValue={data?.title} />
+            </FormItem>
+            <FormItem label={'Description'} errors={errors.description?.message}>
+              <Controller
+                control={control}
+                name="description"
+                defaultValue={data?.description}
+                render={({ onChange, value }) => (
+                  <QuillNoSSRWrapper theme="snow" value={value} onChange={onChange} defaultValue={data?.description} />
+                )}
+              />
+            </FormItem>
+            <Button type="submit" text="edit" />
+          </>
+        )}
+      </HForm>
     </Layout>
   );
 };
