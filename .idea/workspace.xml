@@ -22,7 +22,6 @@
       <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/join.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/join.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/logout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/logout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/apis/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/user.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,7 +94,7 @@
       <workItem from="1612664295436" duration="36855000" />
       <workItem from="1612844656733" duration="24032000" />
       <workItem from="1612940052755" duration="12133000" />
-      <workItem from="1613102604447" duration="23396000" />
+      <workItem from="1613102604447" duration="23507000" />
     </task>
     <servers />
   </component>
