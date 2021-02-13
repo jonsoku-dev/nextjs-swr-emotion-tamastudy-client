@@ -17,7 +17,7 @@ export default withSession(async (req: NextApiRequest, res: NextApiResponse) => 
         Authorization: `Bearer ${token}`
       }
     });
-    const initialUser: UserProps = { isLoggedIn: true, ...authData };
+    const initialUser: UserProps = { isLoggedIn: true, token, ...authData };
     req.session.set('initialUser', initialUser);
     await req.session.save();
     res.json(initialUser);

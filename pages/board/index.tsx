@@ -82,18 +82,15 @@ const BoardIndexPage: NextPage<IndexProps> = ({ serverQuery, initialUser, initia
       replace({
         pathname: '/board',
         query: {
-          ...query,
           page: 0
         }
       });
+      setCurrentPage(0);
     }
-  }, [query.page]);
-
-  useEffect(() => {
     if (query.page) {
       setCurrentPage(Number(query.page));
     }
-  }, [query.page]);
+  }, [currentPage, query.page]);
 
   return (
     <Layout isLoggedIn={user.isLoggedIn}>

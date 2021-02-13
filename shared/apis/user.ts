@@ -6,9 +6,10 @@ export interface IUser {
 
 export interface UserProps {
   isLoggedIn: boolean;
-  userId: number;
-  username: string;
-  email: string;
+  token?: string;
+  userId?: number;
+  username?: string;
+  email?: string;
 }
 
 export interface IUserCreateRequest {}
