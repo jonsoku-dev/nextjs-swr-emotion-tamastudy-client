@@ -1,29 +1,33 @@
+import { AxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 
-import { Layout } from '../components/common/Layout';
-import useUser from '../shared/hooks/useUser';
-import withSession from '../shared/session';
+import { loginAction, useAlertContext, useUser, withSession } from '../shared';
 
 interface Props {}
 
 const LoginPage: NextPage<Props> = () => {
-  const { user, login } = useUser({
+  const { mutateUser } = useUser({
     redirectTo: '/',
     redirectIfFound: true
   });
 
+  const { setError } = useAlertContext();
+
+  const onClickLogin = () => {
+    mutateUser(
+      loginAction({
+        email: 'the2792@gmail.com',
+        password: '1234'
+      })
+    ).catch((error: AxiosError) => {
+      setError({ message: '로그인 에러입니다.', status: error.response?.status, type: 'warn' });
+    });
+  };
+
   return (
-    <Layout isLoggedIn={user?.isLoggedIn}>
-      <button
-        onClick={() =>
-          login({
-            email: 'the2792@gmail.com',
-            password: '1234'
-          })
-        }>
-        onClickLogin
-      </button>
-    </Layout>
+    <div>
+      <button onClick={onClickLogin}>onClickLogin</button>
+    </div>
   );
 };
 

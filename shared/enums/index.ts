@@ -1,2 +1,2 @@
-export * from './board';
-export * from './user';
+export * from './shared';
+export * from './urls';

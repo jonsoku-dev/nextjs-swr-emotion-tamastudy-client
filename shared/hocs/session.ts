@@ -1,7 +1,7 @@
 import { Handler, withIronSession } from 'next-iron-session';
 
-export default function withSession(handler: Handler) {
-  return withIronSession(handler, {
+export const withSession = (handler: Handler) =>
+  withIronSession(handler, {
     password: '123412341234123412341234123412341234123412341234123412341234123412341234',
     cookieName: 'next-iron-session/examples/next.js',
     cookieOptions: {
@@ -10,4 +10,3 @@ export default function withSession(handler: Handler) {
       secure: process.env.NODE_ENV === 'production'
     }
   });
-}

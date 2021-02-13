@@ -49,6 +49,4 @@ export const light = {
 //   background: '#600099'
 // };
 
-const theme = light; // set the light theme as the default.
-
-export default theme;
+export const theme = light; // set the light theme as the default.

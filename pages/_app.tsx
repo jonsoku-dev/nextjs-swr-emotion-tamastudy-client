@@ -1,27 +1,27 @@
 import { ThemeProvider } from '@emotion/react';
 import { AppProps } from 'next/app';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 
-import useUser from '../shared/hooks/useUser';
-import { GlobalStyle } from '../shared/styles';
-import theme from '../shared/styles/theme';
-import axios from '../shared/utils/axios';
+import { ErrorBoundary, Layout } from '../components/templates';
+import { APIErrorProvider, Axios, GlobalStyle, IS_SERVER, JWT_TOKEN, theme, useUser } from '../shared';
 
 interface InitialProps {}
 
 const App = ({ Component, pageProps }: AppProps & InitialProps) => {
   const { user } = useUser({});
+
+  useEffect(() => {
+    if (!IS_SERVER) {
+      localStorage.setItem(JWT_TOKEN, user.token || '');
+    }
+  }, [IS_SERVER, user]);
+
   return (
     <SWRConfig
       value={{
         fetcher: async (url: string) => {
-          const res = await axios.get(url, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.token}`
-            }
-          });
+          const res = await Axios.get(url);
           return res.data;
         },
         revalidateOnFocus: false,
@@ -31,7 +31,12 @@ const App = ({ Component, pageProps }: AppProps & InitialProps) => {
       }}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <Component {...pageProps} />
+        <APIErrorProvider>
+          <Layout isLoggedIn={user.isLoggedIn}>
+            <Component {...pageProps} />
+          </Layout>
+          <ErrorBoundary />
+        </APIErrorProvider>
       </ThemeProvider>
     </SWRConfig>
   );

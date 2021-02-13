@@ -1,4 +1,4 @@
-import withSession from '../../shared/session';
+import { withSession } from '../../shared';
 
 export default withSession(async (req, res) => {
   req.session.destroy();

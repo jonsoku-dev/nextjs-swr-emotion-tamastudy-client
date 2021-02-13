@@ -1,9 +1,8 @@
 import Router from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 
-import { UserProps } from '../apis';
-import fetchJson from '../utils/fetchJson';
+import { UserProps } from '../types';
 
 interface Props {
   redirectTo?: string;
@@ -11,7 +10,7 @@ interface Props {
   initialUser?: UserProps;
 }
 
-const useUser = ({ redirectTo, redirectIfFound = false, initialUser }: Props) => {
+export const useUser = ({ redirectTo, redirectIfFound = false, initialUser }: Props) => {
   const { data: user, mutate: mutateUser } = useSWR('/api/user', {
     initialData: initialUser
   });
@@ -31,25 +30,5 @@ const useUser = ({ redirectTo, redirectIfFound = false, initialUser }: Props) =>
     }
   }, [user, redirectIfFound, redirectTo]);
 
-  const login = useCallback(async (form: { email: string; password: string }) => {
-    await mutateUser(
-      fetchJson('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      })
-    );
-  }, []);
-
-  const logout = useCallback(async () => {
-    await mutateUser(
-      fetchJson('/api/logout', {
-        method: 'POST'
-      })
-    );
-  }, []);
-
-  return { user: user ? user : ({ isLoggedIn: false } as UserProps), login, logout };
+  return { user: user ? user : ({ isLoggedIn: false } as UserProps), mutateUser };
 };
-
-export default useUser;

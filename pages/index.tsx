@@ -1,21 +1,16 @@
 import { GetServerSideProps, NextPage } from 'next';
-import nookies from 'nookies';
 
-import { Layout } from '../components/common/Layout';
-import { UserProps } from '../shared/apis';
-import { JWT_TOKEN } from '../shared/enums';
-import useUser from '../shared/hooks/useUser';
-import withSession from '../shared/session';
+import { UserProps, useUser, withSession } from '../shared';
 
 interface Props {
-  initialUser: UserProps;
+  initialUser?: UserProps;
 }
 
 const IndexPage: NextPage<Props> = ({ initialUser }) => {
   const { user } = useUser({
     initialUser
   });
-  return <Layout isLoggedIn={user?.isLoggedIn}>IndexPage</Layout>;
+  return <div>{user.token}</div>;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
@@ -29,8 +24,6 @@ export const getServerSideProps: GetServerSideProps<Props> = withSession(async (
       }
     };
   }
-
-  nookies.set(ctx, JWT_TOKEN, initialUser.token || '');
 
   return {
     props: { initialUser }

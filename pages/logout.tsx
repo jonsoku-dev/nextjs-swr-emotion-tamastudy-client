@@ -1,26 +1,27 @@
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
 
-import { UserProps } from '../shared/apis';
-import useUser from '../shared/hooks/useUser';
-import withSession from '../shared/session';
+import { logoutAction, UserProps, useUser, withSession } from '../shared';
 
 interface Props {
   initialUser: UserProps;
 }
 
 const LogoutPage: NextPage<Props> = ({ initialUser }) => {
-  const { user, logout } = useUser({
+  const { user, mutateUser } = useUser({
     redirectTo: '/login',
     redirectIfFound: true,
     initialUser
   });
 
   useEffect(() => {
+    const logout = async () => {
+      await mutateUser(logoutAction());
+    };
     if (user.isLoggedIn) {
       logout();
     }
-  }, [user, logout]);
+  }, [user, logoutAction]);
 
   return <div>LogoutPage</div>;
 };

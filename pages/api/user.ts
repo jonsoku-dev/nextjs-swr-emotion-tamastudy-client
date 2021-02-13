@@ -1,8 +1,7 @@
-import withSession from '../../shared/session';
+import { withSession } from '../../shared';
 
 export default withSession(async (req, res) => {
   const initialUser = req.session.get('initialUser');
-  console.log('====== api/user', JSON.stringify(initialUser));
 
   if (initialUser) {
     res.json({

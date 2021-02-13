@@ -1,12 +1,23 @@
-import axios from 'axios';
-import nookies from 'nookies';
+import axios, { AxiosError } from 'axios';
 
 import { JWT_TOKEN } from '../enums';
+import { IS_SERVER } from './isServer';
 
-export default axios.create({
+const Axios = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${nookies.get(null)[JWT_TOKEN]}`
+    Authorization: `Bearer ${IS_SERVER ? null : localStorage.getItem(JWT_TOKEN)}`
   }
 });
+
+Axios.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error: AxiosError) => {
+    throw error;
+  }
+);
+
+export { Axios };
