@@ -1,7 +1,7 @@
 import 'react-quill/dist/quill.snow.css';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
@@ -11,21 +11,25 @@ import * as yup from 'yup';
 import { Button, HForm, HInput, HSelect } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { FormItem } from '../../components/molecules';
-import { basePostAPI, IBoard, IBoardCreateRequest } from '../../shared/apis';
+import { basePostAPI, IBoard, IBoardCreateRequest, UserProps } from '../../shared/apis';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../shared/enums';
-import { useBoards, useCategory, useUserContext } from '../../shared/hooks';
+import { useBoards, useCategory } from '../../shared/hooks';
+import useUser from '../../shared/hooks/useUser';
+import withSession from '../../shared/session';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
 });
-
-interface Props {}
 
 type FormValues = {
   title: string;
   description: string;
   categoryId: number;
 };
+
+interface Props {
+  initialUser?: UserProps;
+}
 
 const schema = yup.object().shape({
   title: yup
@@ -47,8 +51,11 @@ const schema = yup.object().shape({
     .required(BOARD_ERROR_MESSAGES.REQUIRED_CATEGORY_ID)
 });
 
-const CreateBoardPage: NextPage<Props> = () => {
-  const userContext = useUserContext();
+const CreateBoardPage: NextPage<Props> = ({ initialUser }) => {
+  const { user } = useUser({
+    redirectIfFound: false,
+    initialUser
+  });
   const router = useRouter();
 
   const { mutate } = useBoards();
@@ -56,7 +63,6 @@ const CreateBoardPage: NextPage<Props> = () => {
 
   const onSubmit = useCallback(
     async (form: IBoardCreateRequest) => {
-      console.log(form);
       await basePostAPI<IBoardCreateRequest, IBoard>(BOARD_URI.BASE, form);
       await mutate();
       await router.push('/board');
@@ -65,7 +71,7 @@ const CreateBoardPage: NextPage<Props> = () => {
   );
 
   return (
-    <Layout title="create board page" {...userContext}>
+    <Layout title="create board page" isLoggedIn={user.isLoggedIn}>
       <HForm<FormValues> onSubmit={onSubmit} resolver={yupResolver(schema)}>
         {({ register, errors, control }) => (
           <>
@@ -97,10 +103,23 @@ const CreateBoardPage: NextPage<Props> = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps = withSession(async (ctx) => {
+  const initialUser = ctx.req.session.get('initialUser');
+
+  if (initialUser === undefined) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/login'
+      }
+    };
+  }
+
   return {
-    props: {}
+    props: {
+      initialUser
+    }
   };
-};
+});
 
 export default CreateBoardPage;

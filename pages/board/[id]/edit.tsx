@@ -1,7 +1,8 @@
 import 'react-quill/dist/quill.snow.css';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GetServerSideProps, NextPage } from 'next';
+import axios, { AxiosError } from 'axios';
+import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
@@ -11,17 +12,20 @@ import * as yup from 'yup';
 import { Button, HForm, HInput, HSelect } from '../../../components/atoms';
 import { Layout } from '../../../components/common';
 import { FormItem } from '../../../components/molecules';
-import { basePatchAPI, IBoard, IBoardUpdateRequest } from '../../../shared/apis';
+import { basePatchAPI, ErrorProps, IBoard, IBoardUpdateRequest, UserProps } from '../../../shared/apis';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../../shared/enums';
-import { useBoard, useCategory, useUserContext } from '../../../shared/hooks';
+import { useBoard, useCategory } from '../../../shared/hooks';
+import useUser from '../../../shared/hooks/useUser';
+import withSession from '../../../shared/session';
 import { getAsString } from '../../../shared/utils/getAsString';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
 });
 
-interface Props {
+interface Props extends ErrorProps {
   boardId: string;
+  initialUser?: UserProps;
   initialBoard: IBoard | null;
 }
 
@@ -36,8 +40,10 @@ const schema = yup.object().shape({
   categoryId: yup.number().typeError(BOARD_ERROR_MESSAGES.NUMBER_TYPE)
 });
 
-const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
-  const userContext = useUserContext();
+const UpdateBoardPage: NextPage<Props> = ({ boardId, initialUser, initialBoard, errorCode, errorMessage }) => {
+  const { user } = useUser({
+    initialUser
+  });
   const router = useRouter();
 
   const { data, mutate } = useBoard(boardId, initialBoard);
@@ -53,8 +59,11 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
     [mutate, boardId]
   );
 
+  console.log(`errorCode: ${errorCode}`);
+  console.log(`errorMessage: ${errorMessage}`);
+
   return (
-    <Layout title="edit board page" {...userContext}>
+    <Layout title="edit board page" isLoggedIn={user.isLoggedIn}>
       <HForm<IBoardUpdateRequest> onSubmit={onSubmit} resolver={yupResolver(schema)}>
         {({ register, errors, control }) => (
           <>
@@ -87,16 +96,37 @@ const UpdateBoardPage: NextPage<Props> = ({ boardId, initialBoard }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const boardId = getAsString(ctx.query.id || '');
-  const getBoard = await fetch(`${BOARD_URI.BASE}/${boardId}`);
-  const initialBoard = getBoard.ok ? await getBoard.json() : null;
-  return {
-    props: {
-      boardId,
-      initialBoard
+export const getServerSideProps = withSession(async (ctx) => {
+  try {
+    const initialUser = ctx.req.session.get('initialUser');
+
+    if (initialUser === undefined) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/login'
+        }
+      };
     }
-  };
-};
+    const boardId = getAsString(ctx.query.id || '');
+    const boardResponse = await axios.get(`${BOARD_URI.BASE}/${boardId}`);
+
+    return {
+      props: {
+        initialUser,
+        boardId,
+        initialBoard: boardResponse.data
+      }
+    };
+  } catch (e) {
+    const err = e as AxiosError;
+    return {
+      props: {
+        errorCode: err.response?.status,
+        errorMessage: err.response?.data.message
+      }
+    };
+  }
+});
 
 export default UpdateBoardPage;

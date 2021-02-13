@@ -16,7 +16,7 @@ const IndexPage: NextPage<Props> = ({ initialUser }) => {
   return <Layout isLoggedIn={user?.isLoggedIn}>IndexPage</Layout>;
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req }) => {
   const initialUser = req.session.get('initialUser');
 
   if (initialUser === undefined) {

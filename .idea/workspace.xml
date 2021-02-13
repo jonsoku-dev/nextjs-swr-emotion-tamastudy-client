@@ -19,9 +19,14 @@
       <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/api/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/login.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/api/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/create.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/create.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/join.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/join.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/apis/shared.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/shared.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/apis/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/apis/user.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,7 +99,7 @@
       <workItem from="1612664295436" duration="36855000" />
       <workItem from="1612844656733" duration="24032000" />
       <workItem from="1612940052755" duration="12133000" />
-      <workItem from="1613102604447" duration="23507000" />
+      <workItem from="1613102604447" duration="26461000" />
     </task>
     <servers />
   </component>
@@ -147,15 +152,15 @@
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="3231" y="644" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.5120.1415@0.25.5120.1415" timestamp="1612540818652" />
-    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1613136924905">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup" timestamp="1613176242394">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
-    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1613136924905" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1613143603078">
+    <state x="3788" y="467" width="1329" height="580" key="find.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1613176242394" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup" timestamp="1613176239006">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>
     <state x="1010" y="259" width="670" height="490" key="search.everywhere.popup/0.25.1680.1025@0.25.1680.1025" timestamp="1612705081573" />
-    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1613143603078" />
+    <state x="3753" y="348" width="670" height="676" key="search.everywhere.popup/0.25.5120.1415@0.25.5120.1415" timestamp="1613176239006" />
     <state x="3578" y="627" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1612258440066">
       <screen x="0" y="25" width="5120" height="1415" />
     </state>

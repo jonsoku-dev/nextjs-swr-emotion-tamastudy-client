@@ -1,5 +1,10 @@
 import axios from '../utils/axios';
 
+export interface ErrorProps {
+  errorCode?: string;
+  errorMessage?: string;
+}
+
 interface Pageable {
   sort: Sort;
   pageNumber: number;

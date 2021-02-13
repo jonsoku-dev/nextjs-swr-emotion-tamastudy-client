@@ -8,23 +8,27 @@ import useSWR from 'swr';
 import { Button, FlexBox } from '../../components/atoms';
 import { Layout } from '../../components/common';
 import { BaseCard, Page } from '../../components/molecules';
-import { IBoardPaging, ICategory } from '../../shared/apis';
+import { IBoardPaging, ICategory, UserProps } from '../../shared/apis';
 import { BOARD_URI } from '../../shared/enums';
 import { CATEGORY_URI } from '../../shared/enums/category';
-import { useUserContext } from '../../shared/hooks';
-import { InitialUserProps } from '../_app';
+import useUser from '../../shared/hooks/useUser';
+import withSession from '../../shared/session';
 
-export interface IndexProps extends InitialUserProps {
+export interface IndexProps {
   serverQuery: ParsedUrlQuery;
-  initialBoards: IBoardPaging | null;
-  initialCategories: ICategory[] | null;
+  initialUser?: UserProps;
+  initialBoards?: IBoardPaging;
+  initialCategories?: ICategory[];
 }
 
-const BoardIndexPage: NextPage<IndexProps> = ({ serverQuery, initialBoards, initialCategories }) => {
+const BoardIndexPage: NextPage<IndexProps> = ({ serverQuery, initialUser, initialBoards, initialCategories }) => {
   const { query, push, replace } = useRouter();
-  const [keyword, setKeyword] = useState(String(serverQuery.keyword) ?? '');
+  const [keyword, setKeyword] = useState(serverQuery.keyword ?? '');
   const [currentPage, setCurrentPage] = useState(Number(serverQuery.page) ?? 0);
-  const userContext = useUserContext();
+  const { user } = useUser({
+    redirectIfFound: false,
+    initialUser
+  });
 
   const { data: boards } = useSWR(BOARD_URI.BASE + '?' + stringify(query), {
     dedupingInterval: 15000,
@@ -92,8 +96,8 @@ const BoardIndexPage: NextPage<IndexProps> = ({ serverQuery, initialBoards, init
   }, [query.page]);
 
   return (
-    <Layout title="Home | Next.js + TypeScript Example" {...userContext}>
-      {userContext.isLoggedIn && (
+    <Layout isLoggedIn={user.isLoggedIn}>
+      {user.isLoggedIn && (
         <FlexBox vertical={'space-between'}>
           <input value={keyword} onChange={onChangeKeyword} onKeyPress={onKeyDownKeyword} />
           <Button text={'CREATE'} onClick={onClickCreate} />
@@ -150,16 +154,29 @@ const BoardIndexPage: NextPage<IndexProps> = ({ serverQuery, initialBoards, init
   );
 };
 
-export const getServerSideProps: GetServerSideProps<IndexProps> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<IndexProps> = withSession(async (ctx) => {
+  const initialUser = ctx.req.session.get('initialUser');
   const getBoards = await fetch(`${BOARD_URI.BASE}?${ctx.query}`);
   const getCategories = await fetch(`${CATEGORY_URI.BASE}`);
+
+  const props = {
+    serverQuery: ctx.query,
+    initialBoards: getBoards.ok ? await getBoards.json() : null,
+    initialCategories: getCategories.ok ? await getCategories.json() : null
+  };
+
+  if (initialUser === undefined) {
+    return {
+      props
+    };
+  }
+
   return {
     props: {
-      serverQuery: ctx.query,
-      initialBoards: getBoards.ok ? await getBoards.json() : null,
-      initialCategories: getCategories.ok ? await getCategories.json() : null
+      ...props,
+      initialUser: initialUser
     }
   };
-};
+});
 
 export default BoardIndexPage;

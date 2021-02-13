@@ -13,11 +13,14 @@ import { Button, FlexBox, H1, HForm, HInput } from '../../../components/atoms';
 import { Layout } from '../../../components/common';
 import { Buttons, FormItem, InfoLabels } from '../../../components/molecules';
 import { BaseComments } from '../../../components/organisms/BaseComments';
-import { baseDeleteAPI, basePatchAPI, basePostAPI, IBoard } from '../../../shared/apis';
+import { baseDeleteAPI, basePatchAPI, basePostAPI, IBoard, UserProps } from '../../../shared/apis';
 import { IComment } from '../../../shared/apis/comment';
 import { BOARD_ERROR_MESSAGES, BOARD_URI } from '../../../shared/enums';
-import { useBoards, useUserContext } from '../../../shared/hooks';
+import { useBoards } from '../../../shared/hooks';
+import useUser from '../../../shared/hooks/useUser';
+import withSession from '../../../shared/session';
 import { getAsString } from '../../../shared/utils/getAsString';
+import { IndexProps } from '../index';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
@@ -37,14 +40,17 @@ interface FormValues {
 
 interface BoardPageProps {
   boardId: string;
-  initialBoard: IBoard | null;
-  initialComments: IComment[] | null;
+  initialUser?: UserProps;
+  initialBoard?: IBoard;
+  initialComments?: IComment[];
 }
 
-const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard, initialComments }) => {
+const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialUser, initialBoard, initialComments }) => {
   const router = useRouter();
   const { mutate: setBoards } = useBoards();
-  const userContext = useUserContext();
+  const { user } = useUser({
+    initialUser
+  });
 
   const { data: board } = useSWR(`${BOARD_URI.BASE}/${boardId}`, {
     dedupingInterval: 1500,
@@ -109,10 +115,10 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard, initialCom
     }
   }, [board]);
 
-  const isAuthor = userContext.user?.userId === board?.userId;
+  const isAuthor = user.userId === board?.userId;
 
   return (
-    <Layout title="About | Next.js + TypeScript Example" {...userContext}>
+    <Layout title="About | Next.js + TypeScript Example" isLoggedIn={user.isLoggedIn}>
       <FlexBox direction={'column'} gap={24}>
         <H1>{board?.title}</H1>
         <InfoLabels
@@ -158,20 +164,33 @@ const BoardPage: React.FC<BoardPageProps> = ({ boardId, initialBoard, initialCom
   );
 };
 
-export const getServerSideProps: GetServerSideProps<BoardPageProps> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<IndexProps> = withSession(async (ctx) => {
+  const initialUser = ctx.req.session.get('initialUser');
+
   const boardId = getAsString(ctx.query.id || '');
   const [getBoard, getComments] = await Promise.all([
     fetch(`${BOARD_URI.BASE}/${boardId}`),
     fetch(`${BOARD_URI.BASE}/${boardId}/comment`)
   ]);
 
+  const props = {
+    boardId,
+    initialBoard: getBoard.ok ? await getBoard.json() : null,
+    initialComments: getComments.ok ? await getComments.json() : null
+  };
+
+  if (initialUser === undefined) {
+    return {
+      props
+    };
+  }
+
   return {
     props: {
-      boardId,
-      initialBoard: getBoard.ok ? await getBoard.json() : null,
-      initialComments: getComments.ok ? await getComments.json() : null
+      ...props,
+      initialUser
     }
   };
-};
+});
 
 export default BoardPage;
