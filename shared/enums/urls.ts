@@ -6,5 +6,5 @@ export enum API_URL {
 
 export enum BOARD_URL {
   BASE_BOARD = 'http://localhost:8080/api/v1/board',
-  BASE_CATEGORY = 'http://localhost:8080/api/v1/category/join'
+  BASE_CATEGORY = 'http://localhost:8080/api/v1/category'
 }

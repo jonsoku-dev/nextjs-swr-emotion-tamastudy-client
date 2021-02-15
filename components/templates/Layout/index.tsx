@@ -47,10 +47,7 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', i
             </CLink>
             <CLink
               href={{
-                pathname: '/board',
-                query: {
-                  page: 0
-                }
+                pathname: '/board'
               }}>
               <H4>BOARD</H4>
             </CLink>

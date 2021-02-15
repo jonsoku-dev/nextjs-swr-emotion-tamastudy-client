@@ -10,8 +10,6 @@ export const ErrorBoundary: React.FC<Props> = () => {
 
   if (errors.length === 0) return null;
 
-  console.log(errors);
-
   return (
     <div
       css={css`

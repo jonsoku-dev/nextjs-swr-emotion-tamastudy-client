@@ -21,8 +21,7 @@ const App = ({ Component, pageProps }: AppProps & InitialProps) => {
     <SWRConfig
       value={{
         fetcher: async (url: string) => {
-          const res = await Axios.get(url);
-          return res.data;
+          return await Axios.get(url);
         },
         revalidateOnFocus: false,
         revalidateOnReconnect: false,

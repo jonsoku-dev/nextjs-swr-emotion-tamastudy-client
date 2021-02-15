@@ -7,14 +7,12 @@ const Axios = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${IS_SERVER ? null : localStorage.getItem(JWT_TOKEN)}`
+    Authorization: IS_SERVER ? 'x' : localStorage.getItem(JWT_TOKEN) ? `Bearer ${localStorage.getItem(JWT_TOKEN)}` : 'x'
   }
 });
 
 Axios.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
+  (response) => response,
   (error: AxiosError) => {
     throw error;
   }

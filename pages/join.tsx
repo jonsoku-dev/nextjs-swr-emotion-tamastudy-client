@@ -1,29 +1,37 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { AxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
-import { joinAction } from '../shared';
-import { withSession } from '../shared/hocs';
-import { useUser } from '../shared/hooks';
+import { HForm, HInput } from '../components/atoms';
+import { joinAction, useAlertContext, UserJoinForm, userJoinSchema, withSession } from '../shared';
 
 interface Props {}
 
 const JoinPage: NextPage<Props> = () => {
-  const { mutateUser } = useUser({
-    redirectTo: '/',
-    redirectIfFound: true
-  });
+  const router = useRouter();
+  const { setError } = useAlertContext();
+
+  const handleSubmit = useCallback((form: UserJoinForm) => {
+    joinAction(form)
+      .then(() => router.push(`/login?email=${form.email}`, 'login'))
+      .catch((error: AxiosError) => {
+        setError({ message: '회원가입 에러입니다.', status: error.response?.status, type: 'error' });
+      });
+  }, []);
+
   return (
-    <button
-      onClick={async () =>
-        await mutateUser(
-          joinAction({
-            username: '1234',
-            email: 'the2792@gmail.com',
-            password: '1234'
-          })
-        )
-      }>
-      onClickJoin
-    </button>
+    <HForm onSubmit={handleSubmit} resolver={yupResolver(userJoinSchema)}>
+      {({ register }) => (
+        <>
+          <HInput placeholder={'username'} name={'username'} ref={register} />
+          <HInput placeholder={'email'} name={'email'} ref={register} />
+          <HInput placeholder={'password'} name={'password'} ref={register} />
+          <HInput type="submit" />
+        </>
+      )}
+    </HForm>
   );
 };
 

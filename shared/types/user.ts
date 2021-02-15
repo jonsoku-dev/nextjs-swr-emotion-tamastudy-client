@@ -5,3 +5,14 @@ export interface UserProps {
   username?: string;
   userId?: string;
 }
+
+export interface UserLoginForm {
+  email: string;
+  password: string;
+}
+
+export interface UserJoinForm {
+  email: string;
+  password: string;
+  username: string;
+}

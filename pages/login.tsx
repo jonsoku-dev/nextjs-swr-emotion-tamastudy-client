@@ -1,11 +1,16 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { AxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
-import { loginAction, useAlertContext, useUser, withSession } from '../shared';
+import { HForm, HInput } from '../components/atoms';
+import { loginAction, useAlertContext, userJoinSchema, UserLoginForm, useUser, withSession } from '../shared';
 
 interface Props {}
 
 const LoginPage: NextPage<Props> = () => {
+  const router = useRouter();
   const { mutateUser } = useUser({
     redirectTo: '/',
     redirectIfFound: true
@@ -13,21 +18,22 @@ const LoginPage: NextPage<Props> = () => {
 
   const { setError } = useAlertContext();
 
-  const onClickLogin = () => {
-    mutateUser(
-      loginAction({
-        email: 'the2792@gmail.com',
-        password: '1234'
-      })
-    ).catch((error: AxiosError) => {
-      setError({ message: '로그인 에러입니다.', status: error.response?.status, type: 'warn' });
+  const handleSubmit = useCallback((form: UserLoginForm) => {
+    mutateUser(loginAction(form)).catch((error: AxiosError) => {
+      setError({ message: '로그인 에러입니다.', status: error.response?.status, type: 'error' });
     });
-  };
+  }, []);
 
   return (
-    <div>
-      <button onClick={onClickLogin}>onClickLogin</button>
-    </div>
+    <HForm onSubmit={handleSubmit} resolver={yupResolver(userJoinSchema)}>
+      {({ register }) => (
+        <>
+          <HInput name={'email'} ref={register} defaultValue={router.query.email} />
+          <HInput name={'password'} ref={register} />
+          <HInput type="submit" />
+        </>
+      )}
+    </HForm>
   );
 };
 
