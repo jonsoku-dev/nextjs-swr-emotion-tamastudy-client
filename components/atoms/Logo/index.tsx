@@ -1,6 +1,5 @@
 import { css, useTheme } from '@emotion/react';
 import React from 'react';
-import { FiMonitor } from 'react-icons/fi';
 
 import { CLink } from '../CLink';
 import { H1 } from '../Typography';
@@ -15,10 +14,10 @@ export const Logo: React.FC<Props> = () => {
         css={css`
           font-family: 'Do Hyeon', serif;
           margin-right: ${theme.space / 2}px;
+          color: #ffffff;
         `}>
         아이니티
       </H1>
-      <FiMonitor size={'2.4rem'} />
     </CLink>
   );
 };

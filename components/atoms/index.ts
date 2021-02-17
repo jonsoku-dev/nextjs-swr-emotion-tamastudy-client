@@ -1,5 +1,6 @@
 export * from './Button';
 export * from './CHead';
+export * from './CircleIconButton';
 export * from './CLink';
 export * from './Container';
 export * from './DynamicComponent';
@@ -10,6 +11,7 @@ export * from './HForm';
 export * from './HInput';
 export * from './HoverMenu';
 export * from './HSelect';
+export * from './IconButton';
 export * from './InfoLabel';
 export * from './Label';
 export * from './Logo';

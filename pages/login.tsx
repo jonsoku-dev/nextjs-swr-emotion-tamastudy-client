@@ -5,13 +5,14 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { HForm, HInput } from '../components/atoms';
+import { Layout } from '../components/templates/Layout';
 import { loginAction, useAlertContext, userJoinSchema, UserLoginForm, useUser, withSession } from '../shared';
 
 interface Props {}
 
 const LoginPage: NextPage<Props> = () => {
   const router = useRouter();
-  const { mutateUser } = useUser({
+  const { user, mutateUser } = useUser({
     redirectTo: '/',
     redirectIfFound: true
   });
@@ -25,15 +26,17 @@ const LoginPage: NextPage<Props> = () => {
   }, []);
 
   return (
-    <HForm onSubmit={handleSubmit} resolver={yupResolver(userJoinSchema)}>
-      {({ register }) => (
-        <>
-          <HInput name={'email'} ref={register} defaultValue={router.query.email} />
-          <HInput name={'password'} ref={register} />
-          <HInput type="submit" />
-        </>
-      )}
-    </HForm>
+    <Layout isLoggedIn={user.isLoggedIn}>
+      <HForm onSubmit={handleSubmit} resolver={yupResolver(userJoinSchema)}>
+        {({ register }) => (
+          <>
+            <HInput name={'email'} ref={register} defaultValue={router.query.email} />
+            <HInput name={'password'} ref={register} />
+            <HInput type="submit" />
+          </>
+        )}
+      </HForm>
+    </Layout>
   );
 };
 

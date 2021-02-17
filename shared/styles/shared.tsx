@@ -147,6 +147,15 @@ export const GlobalStyle = () => (
         line-height: 1.15; /* 1 */
         margin: 0; /* 2 */
       }
+      input {
+        border: 1px solid #ccc;
+        transition: all 0.1s linear;
+        border-radius: 2px;
+        &:focus {
+          outline: none;
+          border: 2px solid #868686;
+        }
+      }
 
       /**
  * Show the overflow in IE.
@@ -357,8 +366,26 @@ export const GlobalStyle = () => (
       body {
         margin: 0;
         font-family: 'Roboto', 'HelveticaNeue', 'Helvetica Neue', sans-serif;
-        background-color: #f2f2f2;
+        //background-color: #f2f2f2;
         font-size: 1.3rem;
+      }
+      .pagination {
+        margin: 0;
+        padding: 16px 0;
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 8px;
+        li {
+          cursor: pointer;
+        }
+        .active {
+          font-size: 1.4rem;
+          font-weight: 900;
+        }
+      }
+      .active {
       }
     `}
   />

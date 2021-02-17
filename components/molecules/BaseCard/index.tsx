@@ -4,18 +4,19 @@ import React, { useCallback } from 'react';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaRegCommentDots } from 'react-icons/fa';
 
-import { InfoLabel } from '../../atoms';
+import { FlexBox, InfoLabel } from '../../atoms';
 import { Body2, H4 } from '../../atoms/Typography';
 
 interface Props {
   id: number;
   title: string;
   author: string;
+  createdAt: Date | string;
   commentCount: number;
   url?: string;
 }
 
-export const BaseCard: React.FC<Props> = ({ id, title, author, commentCount, url }) => {
+export const BaseCard: React.FC<Props> = ({ id, title, author, createdAt, commentCount, url }) => {
   const theme = useTheme();
   const router = useRouter();
 
@@ -31,11 +32,10 @@ export const BaseCard: React.FC<Props> = ({ id, title, author, commentCount, url
     <div
       css={css`
         width: 100%;
-        background-color: #ffffff;
-        padding: ${theme.space * 3}px;
-        border-radius: 12px;
+        padding: ${theme.space * 4}px 0;
         display: flex;
         cursor: pointer;
+        border-bottom: 1px solid #eaeaea;
       `}
       onClick={onClickCard}
       onKeyDown={onClickCard}
@@ -51,7 +51,10 @@ export const BaseCard: React.FC<Props> = ({ id, title, author, commentCount, url
           gap: ${theme.space * 2}px;
         `}>
         <H4>{title}</H4>
-        <InfoLabel label={'작성자'} value={author} />
+        <FlexBox direction={'column'} gap={4}>
+          <InfoLabel label={'작성자'} value={author} />
+          <InfoLabel label={'작성일'} value={createdAt} />
+        </FlexBox>
       </div>
       {/* icons */}
       <div

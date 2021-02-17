@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import React, { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 
-import { ErrorBoundary, Layout } from '../components/templates';
+import { ErrorBoundary } from '../components/templates';
 import { APIErrorProvider, Axios, GlobalStyle, IS_SERVER, JWT_TOKEN, theme, useUser } from '../shared';
 
 interface InitialProps {}
@@ -21,7 +21,8 @@ const App = ({ Component, pageProps }: AppProps & InitialProps) => {
     <SWRConfig
       value={{
         fetcher: async (url: string) => {
-          return await Axios.get(url);
+          const res = await Axios.get(url);
+          return res.data;
         },
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -31,9 +32,7 @@ const App = ({ Component, pageProps }: AppProps & InitialProps) => {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <APIErrorProvider>
-          <Layout isLoggedIn={user.isLoggedIn}>
-            <Component {...pageProps} />
-          </Layout>
+          <Component {...pageProps} />
           <ErrorBoundary />
         </APIErrorProvider>
       </ThemeProvider>

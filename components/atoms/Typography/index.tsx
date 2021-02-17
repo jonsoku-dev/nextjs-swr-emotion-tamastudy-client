@@ -35,3 +35,18 @@ export const Body2 = styled((c: PropsWithChildren<DynamicComponentProps>) => Dyn
   font-size: 1.2rem;
   font-weight: 400;
 `;
+
+export const Span = styled((c: PropsWithChildren<DynamicComponentProps>) => DynamicComponent({ el: 'span', ...c }))`
+  font-size: 1.4rem;
+  font-weight: 400;
+`;
+
+export const Span2 = styled((c: PropsWithChildren<DynamicComponentProps>) => DynamicComponent({ el: 'span', ...c }))`
+  font-size: 1.2rem;
+  font-weight: 400;
+`;
+
+export const Span3 = styled((c: PropsWithChildren<DynamicComponentProps>) => DynamicComponent({ el: 'span', ...c }))`
+  font-size: 1rem;
+  font-weight: 400;
+`;

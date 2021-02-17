@@ -5,7 +5,7 @@ import { Body2 } from '../../atoms';
 
 interface Props {
   label: string;
-  value: string;
+  value: any;
 }
 
 export const InfoLabel: React.FC<Props> = ({ label, value }) => {

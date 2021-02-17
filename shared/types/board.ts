@@ -44,3 +44,24 @@ export interface CategoryProps {
   categoryId: number;
   name: string;
 }
+
+export interface CommentProps {
+  commentId: number;
+  text: string;
+  userId: number;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateBoardForm {
+  title: string;
+  description: string;
+  categoryId: number;
+}
+
+export interface UpdateBoardForm extends Partial<CreateBoardForm> {}
+
+export interface CommentForm {
+  text: string;
+}

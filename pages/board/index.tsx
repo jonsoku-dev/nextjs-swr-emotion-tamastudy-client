@@ -1,14 +1,16 @@
+import { css } from '@emotion/react';
+import axios from 'axios';
 import deepEqual from 'fast-deep-equal';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery, stringify } from 'querystring';
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
-import { FlexBox } from '../../components/atoms';
+import { CircleIconButton, FlexBox } from '../../components/atoms';
 import { BaseCard } from '../../components/molecules';
+import { Layout } from '../../components/templates/Layout';
 import {
-  Axios,
   BOARD_URL,
   BoardProps,
   CategoryProps,
@@ -29,7 +31,7 @@ interface Props {
 const BoardsPage: NextPage<Props> = ({ serverQuery, initialUser, initialBoards, initialCategories }) => {
   const [keyword, setKeyword] = useState('');
   const router = useRouter();
-  useUser({
+  const { user } = useUser({
     redirectIfFound: false,
     initialUser
   });
@@ -66,9 +68,13 @@ const BoardsPage: NextPage<Props> = ({ serverQuery, initialUser, initialBoards, 
 
   const handleCategoryName = (e: ChangeEvent<HTMLSelectElement>) => {
     const currentPath = router.pathname;
-    const currentQuery = router.query;
+    const currentQuery = { ...router.query };
 
-    currentQuery.categoryName = e.target.value;
+    if (e.target.value === 'all') {
+      delete currentQuery.categoryName;
+    } else {
+      currentQuery.categoryName = e.target.value;
+    }
 
     router.push({
       pathname: currentPath,
@@ -97,20 +103,36 @@ const BoardsPage: NextPage<Props> = ({ serverQuery, initialUser, initialBoards, 
   if (!boards) return <div>Loading...</div>;
 
   return (
-    <div>
-      {categories ? (
-        <select onBlur={handleCategoryName} onChange={handleCategoryName} defaultValue={router.query.categoryName}>
-          {categories.map((category) => (
-            <option key={category.categoryId} value={category.name}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <div>Category Loading ...</div>
-      )}
-      <input onChange={handleChangeKeyword} value={keyword} onKeyPress={handleSubmitKeyword} />
-      <FlexBox direction={'column'} gap={8}>
+    <Layout isLoggedIn={user.isLoggedIn}>
+      <FlexBox>
+        {categories ? (
+          <select
+            css={css`
+              flex: 1;
+            `}
+            onBlur={handleCategoryName}
+            onChange={handleCategoryName}
+            defaultValue={router.query.categoryName}>
+            <option value={'all'}>All</option>
+            {categories.map((category) => (
+              <option key={category.categoryId} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <div>Category Loading ...</div>
+        )}
+        <input
+          onChange={handleChangeKeyword}
+          value={keyword}
+          onKeyPress={handleSubmitKeyword}
+          css={css`
+            flex: 9;
+          `}
+        />
+      </FlexBox>
+      <FlexBox direction={'column'}>
         {boards.content.map((board) => {
           return (
             <BaseCard
@@ -118,6 +140,7 @@ const BoardsPage: NextPage<Props> = ({ serverQuery, initialUser, initialBoards, 
               id={board.boardId}
               title={board.title}
               author={board.username}
+              createdAt={board.createdAt}
               commentCount={0}
               url={`/board/${board.boardId}`}
             />
@@ -125,33 +148,46 @@ const BoardsPage: NextPage<Props> = ({ serverQuery, initialUser, initialBoards, 
         })}
       </FlexBox>
       <ReactPaginate
-        previousLabel={'previous'}
+        previousLabel={'prev'}
         nextLabel={'next'}
         breakLabel={'...'}
         breakClassName={'break-me'}
         initialPage={boards.pageable.pageNumber}
         pageCount={boards.totalPages}
         marginPagesDisplayed={2}
-        pageRangeDisplayed={4}
+        pageRangeDisplayed={2}
         onPageChange={handlePagination}
         containerClassName={'pagination'}
         activeClassName={'active'}
       />
-    </div>
+      {user.isLoggedIn && (
+        <CircleIconButton icon={'AiTwotoneEdit'} color={'#4f4f4f'} onClick={() => router.push('/board/create')} />
+      )}
+    </Layout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
-  const boardsResponse = await Axios.get(`${BOARD_URL.BASE_BOARD}?${stringify(ctx.query)}`);
-  const initialBoards = boardsResponse.data;
-  const categoriesResponse = await Axios.get(`${BOARD_URL.BASE_CATEGORY}`);
-  const initialCategories = categoriesResponse.data;
+  const initialUser = ctx.req.session.get('initialUser') || null;
+  let initialBoards = null;
+  let initialCategories = null;
+
+  await Promise.allSettled([
+    axios.get(`${BOARD_URL.BASE_BOARD}?${stringify(ctx.query)}`),
+    axios.get(`${BOARD_URL.BASE_CATEGORY}`)
+  ]).then(
+    axios.spread((...response) => {
+      initialBoards = response[0].status === 'fulfilled' ? response[0].value.data : null;
+      initialCategories = response[1].status === 'fulfilled' ? response[1].value.data : null;
+    })
+  );
+
   return {
     props: {
       serverQuery: ctx.query,
-      initialUser: ctx.req.session.get('initialUser') || null,
-      initialBoards: initialBoards || null,
-      initialCategories: initialCategories || null
+      initialUser,
+      initialBoards,
+      initialCategories
     }
   };
 });

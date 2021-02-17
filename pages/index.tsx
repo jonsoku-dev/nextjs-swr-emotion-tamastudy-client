@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next';
 
+import { Layout } from '../components/templates/Layout';
 import { UserProps, useUser, withSession } from '../shared';
 
 interface Props {
@@ -10,7 +11,7 @@ const IndexPage: NextPage<Props> = ({ initialUser }) => {
   const { user } = useUser({
     initialUser
   });
-  return <div>{user.token}</div>;
+  return <Layout isLoggedIn={user.isLoggedIn}>{user.token}</Layout>;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {

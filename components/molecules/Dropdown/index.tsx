@@ -6,7 +6,8 @@ import { CLink } from '../../atoms/CLink';
 
 interface IMenu {
   text: string;
-  url: string;
+  url?: string;
+  onClick?: any;
 }
 
 interface Props {
@@ -25,6 +26,9 @@ export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left'
     <div
       css={css`
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       `}>
       <button
         css={css`
@@ -64,14 +68,33 @@ export const Dropdown: React.FC<Props> = ({ button, menus, menuPosition = 'left'
                   background-color: #e1e1e1;
                 }
               `}>
-              <CLink position={'center'} href={menu.url}>
-                <span
+              {menu.url ? (
+                <CLink position={'center'} href={menu.url}>
+                  <span
+                    css={css`
+                      font-size: ${menuFontSize};
+                    `}>
+                    {menu.text}
+                  </span>
+                </CLink>
+              ) : (
+                <div
+                  onClick={menu.onClick}
+                  onKeyPress={menu.onClick}
+                  tabIndex={-1}
+                  role={'button'}
                   css={css`
-                    font-size: ${menuFontSize};
+                    padding: 8px;
+                    cursor: pointer;
                   `}>
-                  {menu.text}
-                </span>
-              </CLink>
+                  <span
+                    css={css`
+                      font-size: ${menuFontSize};
+                    `}>
+                    {menu.text}
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

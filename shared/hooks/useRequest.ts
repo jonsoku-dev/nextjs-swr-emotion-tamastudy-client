@@ -1,7 +1,5 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import useSWR, { ConfigInterface, responseInterface } from 'swr';
-
-import { Axios } from '../utils';
 
 export type GetRequest = AxiosRequestConfig | null;
 
@@ -26,7 +24,7 @@ export const useRequest = <Data = unknown, Error = unknown>(
   const { data: response, error, isValidating, revalidate, mutate } = useSWR<AxiosResponse<Data>, AxiosError<Error>>(
     request && JSON.stringify(request),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    () => Axios(request!),
+    () => axios(request!),
     {
       ...config,
       initialData: initialData && {

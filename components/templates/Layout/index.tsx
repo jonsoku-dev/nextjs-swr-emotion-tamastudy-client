@@ -1,10 +1,11 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import Head from 'next/head';
 import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { FcReddit } from 'react-icons/fc';
+import { GiHamburgerMenu } from 'react-icons/gi';
 
-import { CLink, Container, FlexBox, H4, Logo } from '../../atoms';
+import { Container, FlexBox, Logo } from '../../atoms';
 import { Dropdown } from '../../molecules/Dropdown';
 
 interface Props {
@@ -13,7 +14,6 @@ interface Props {
 }
 
 export const Layout: React.FC<Props> = ({ title = 'This is the default title', isLoggedIn, children }) => {
-  const theme = useTheme();
   return (
     <div>
       <Head>
@@ -21,18 +21,22 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', i
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <header>
+      <header
+        css={css`
+          background-color: #242424;
+          margin-bottom: 16px;
+        `}>
         <Container>
-          <FlexBox
-            vertical={'space-between'}
-            css={css`
-              margin: ${theme.space * 2}px 0;
-            `}>
-            <Logo />
+          <FlexBox vertical={'space-between'}>
             {isLoggedIn ? (
-              <Dropdown button={<FcReddit size={'3rem'} />} menus={[{ text: '로그아웃', url: '/logout' }]} />
+              <Dropdown
+                menuPosition={'left'}
+                button={<FcReddit size={'3rem'} />}
+                menus={[{ text: '로그아웃', url: '/logout' }]}
+              />
             ) : (
               <Dropdown
+                menuPosition={'right'}
                 button={<FaUserCircle size={'3rem'} />}
                 menus={[
                   { text: '로그인', url: '/login' },
@@ -40,17 +44,8 @@ export const Layout: React.FC<Props> = ({ title = 'This is the default title', i
                 ]}
               />
             )}
-          </FlexBox>
-          <FlexBox el={'nav'}>
-            <CLink href={'/'}>
-              <H4>HOME</H4>
-            </CLink>
-            <CLink
-              href={{
-                pathname: '/board'
-              }}>
-              <H4>BOARD</H4>
-            </CLink>
+            <Logo />
+            <Dropdown button={<GiHamburgerMenu size={'2.4rem'} />} menus={[{ text: '게시판', url: '/board' }]} />
           </FlexBox>
         </Container>
       </header>

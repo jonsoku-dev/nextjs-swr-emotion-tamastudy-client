@@ -3,7 +3,7 @@ export interface UserProps {
   token?: string;
   email?: string;
   username?: string;
-  userId?: string;
+  userId?: number;
 }
 
 export interface UserLoginForm {

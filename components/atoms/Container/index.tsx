@@ -16,6 +16,7 @@ export const Container: React.FC<Props & React.HTMLAttributes<HTMLOrSVGElement>>
         width: 100%;
         height: auto;
         margin: 0 auto;
+        padding: 0 16px;
         @media only screen and (min-width: 1024px) {
           & {
             width: 1100px;
