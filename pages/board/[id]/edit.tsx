@@ -18,7 +18,6 @@ import {
   CreateBoardForm,
   createBoardSchema,
   editBoardAction,
-  UserProps,
   useUser,
   withSession
 } from '../../../shared';
@@ -28,16 +27,14 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 });
 
 interface Props {
-  initialUser?: UserProps;
   initialBoard?: BoardProps;
   initialCategories?: CategoryProps[];
 }
 
-const CreateBoardPage: NextPage<Props> = ({ initialUser, initialBoard, initialCategories }) => {
+const CreateBoardPage: NextPage<Props> = ({ initialBoard, initialCategories }) => {
   const { user } = useUser({
     redirectTo: '/board',
-    redirectIfFound: false,
-    initialUser
+    redirectIfFound: false
   });
   const router = useRouter();
 

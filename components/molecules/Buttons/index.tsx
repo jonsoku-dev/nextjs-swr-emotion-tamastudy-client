@@ -29,7 +29,11 @@ export const Buttons: React.FC<Props> = ({ items, ...rest }) => {
     <FlexBox {...rest}>
       {items.map(
         ({ show = true, text, colors, onClick }, idx) =>
-          show && <Button key={idx} colors={colors} onClick={onClick} text={text} />
+          show && (
+            <Button key={idx} colors={colors} onClick={onClick}>
+              {text}
+            </Button>
+          )
       )}
     </FlexBox>
   );

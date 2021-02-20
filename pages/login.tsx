@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AxiosError } from 'axios';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import { HForm, HInput } from '../components/atoms';
 import { Layout } from '../components/templates/Layout';
-import { loginAction, useAlertContext, userJoinSchema, UserLoginForm, useUser, withSession } from '../shared';
+import { loginAction, useAlertContext, userJoinSchema, UserLoginForm, useUser } from '../shared';
 
 interface Props {}
 
@@ -39,22 +39,5 @@ const LoginPage: NextPage<Props> = () => {
     </Layout>
   );
 };
-
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req }) => {
-  const initialUser = req.session.get('initialUser');
-
-  if (initialUser) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/'
-      }
-    };
-  }
-
-  return {
-    props: {}
-  };
-});
 
 export default LoginPage;

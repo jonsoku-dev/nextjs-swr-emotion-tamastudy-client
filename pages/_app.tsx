@@ -1,42 +1,37 @@
 import { ThemeProvider } from '@emotion/react';
+import axios from 'axios';
 import { AppProps } from 'next/app';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SWRConfig } from 'swr';
 
 import { ErrorBoundary } from '../components/templates';
-import { APIErrorProvider, Axios, GlobalStyle, IS_SERVER, JWT_TOKEN, theme, useUser } from '../shared';
+import { APIErrorProvider, GlobalStyle, theme } from '../shared';
+import { AuthProvider } from '../shared/hooks/useAuth';
 
-interface InitialProps {}
-
-const App = ({ Component, pageProps }: AppProps & InitialProps) => {
-  const { user } = useUser({});
-
-  useEffect(() => {
-    if (!IS_SERVER) {
-      localStorage.setItem(JWT_TOKEN, user.token || '');
-    }
-  }, [IS_SERVER, user]);
-
+const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <SWRConfig
-      value={{
-        fetcher: async (url: string) => {
-          const res = await Axios.get(url);
-          return res.data;
-        },
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        shouldRetryOnError: false,
-        refreshInterval: 0
-      }}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <APIErrorProvider>
-          <Component {...pageProps} />
-          <ErrorBoundary />
-        </APIErrorProvider>
-      </ThemeProvider>
-    </SWRConfig>
+    <AuthProvider>
+      <SWRConfig
+        value={{
+          fetcher: async (url: string, queries: any) => {
+            const res = await axios.get(queries ? `${url}?${queries}` : url);
+            return res.data;
+          },
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+          shouldRetryOnError: false,
+          refreshInterval: 0
+          // revalidateOnMount: true
+        }}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <APIErrorProvider>
+            <Component {...pageProps} />
+            <ErrorBoundary />
+          </APIErrorProvider>
+        </ThemeProvider>
+      </SWRConfig>
+    </AuthProvider>
   );
 };
 

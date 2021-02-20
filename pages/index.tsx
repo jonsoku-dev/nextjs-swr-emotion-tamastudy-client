@@ -1,34 +1,28 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 
 import { Layout } from '../components/templates/Layout';
-import { UserProps, useUser, withSession } from '../shared';
+import { useAuth } from '../shared/hooks/useAuth';
 
-interface Props {
-  initialUser?: UserProps;
-}
+interface Props {}
 
-const IndexPage: NextPage<Props> = ({ initialUser }) => {
-  const { user } = useUser({
-    initialUser
-  });
-  return <Layout isLoggedIn={user.isLoggedIn}>{user.token}</Layout>;
+const IndexPage: NextPage<Props> = () => {
+  const { auth, isLoggedIn, login, logout } = useAuth();
+
+  return (
+    <Layout isLoggedIn={isLoggedIn}>
+      <button
+        onClick={() =>
+          login({
+            email: 'test@gmail.com',
+            password: '1234'
+          })
+        }>
+        login
+      </button>
+      <button onClick={() => logout()}>logout</button>
+      auth: ${JSON.stringify(auth)}
+    </Layout>
+  );
 };
-
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
-  const initialUser: UserProps = ctx.req.session.get('initialUser');
-
-  if (initialUser === undefined) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/login'
-      }
-    };
-  }
-
-  return {
-    props: { initialUser }
-  };
-});
 
 export default IndexPage;

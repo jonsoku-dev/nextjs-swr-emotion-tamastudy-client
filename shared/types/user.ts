@@ -6,6 +6,12 @@ export interface UserProps {
   userId?: number;
 }
 
+export interface IUser {
+  email: string;
+  username: string;
+  userId: number;
+}
+
 export interface UserLoginForm {
   email: string;
   password: string;

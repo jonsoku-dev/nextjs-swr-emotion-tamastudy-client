@@ -1,48 +1,28 @@
-import { GetServerSideProps, NextPage } from 'next';
-import { useEffect } from 'react';
+import { NextPage } from 'next';
+import { useCallback, useEffect } from 'react';
 
-import { logoutAction, UserProps, useUser, withSession } from '../shared';
+import { logoutAction, useUser } from '../shared';
 
-interface Props {
-  initialUser: UserProps;
-}
+interface Props {}
 
-const LogoutPage: NextPage<Props> = ({ initialUser }) => {
+const LogoutPage: NextPage<Props> = () => {
   const { user, mutateUser } = useUser({
-    redirectTo: '/login',
     redirectIfFound: true,
-    initialUser
+    redirectTo: '/'
   });
 
+  const logout = useCallback(async () => {
+    await mutateUser(logoutAction());
+  }, [user]);
+
   useEffect(() => {
-    const logout = async () => {
-      await mutateUser(logoutAction());
-    };
     if (user.isLoggedIn) {
+      alert('너 로그인중이잖아');
       logout();
     }
-  }, [user, logoutAction]);
+  }, [user, logout]);
 
   return <div>LogoutPage</div>;
 };
-
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async ({ req }) => {
-  const initialUser = req.session.get('initialUser');
-
-  if (initialUser === undefined) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/login'
-      }
-    };
-  }
-
-  return {
-    props: {
-      initialUser
-    }
-  };
-});
 
 export default LogoutPage;

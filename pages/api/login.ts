@@ -11,12 +11,14 @@ export default withSession(async (req: NextApiRequest, res: NextApiResponse) => 
     const { data: loginData } = await axios.post(loginUrl, req.body);
     const token = loginData.token;
 
-    const { data: authData } = await axios.get(authUrl, {
+    axios.create({
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       }
     });
+
+    const { data: authData } = await axios.get(authUrl);
 
     const initialUser: UserProps = { isLoggedIn: true, token, ...authData };
     req.session.set('initialUser', initialUser);

@@ -7,13 +7,12 @@ import { UserProps } from '../types';
 interface Props {
   redirectTo?: string;
   redirectIfFound?: boolean;
-  initialUser?: UserProps;
 }
 
-export const useUser = ({ redirectTo, redirectIfFound = false, initialUser }: Props) => {
-  const { data: user, mutate: mutateUser } = useSWR('/api/user', {
-    initialData: initialUser
-  });
+const initialKey = '/api/user';
+
+export const useUser = ({ redirectTo, redirectIfFound = false }: Props) => {
+  const { data: user, mutate: mutateUser } = useSWR<UserProps>(initialKey);
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
@@ -29,6 +28,8 @@ export const useUser = ({ redirectTo, redirectIfFound = false, initialUser }: Pr
       Router.push(redirectTo);
     }
   }, [user, redirectIfFound, redirectTo]);
+
+  console.log(user, 'from useUser hook');
 
   return { user: user ? user : ({ isLoggedIn: false } as UserProps), mutateUser };
 };

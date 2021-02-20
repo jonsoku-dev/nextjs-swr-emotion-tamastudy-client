@@ -3,12 +3,11 @@ import 'react-quill/dist/quill.snow.css';
 import { css } from '@emotion/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
-import { GetServerSideProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { RiMoreLine } from 'react-icons/ri';
-import useSWR from 'swr';
 
 import { H1, IconButton, Span } from '../../../components/atoms';
 import { FlexBox } from '../../../components/atoms/FlexBox';
@@ -26,32 +25,55 @@ import {
   editCommentAction
 } from '../../../shared/actions';
 import { BOARD_URL } from '../../../shared/enums';
-import { withSession } from '../../../shared/hocs';
 import { useUser } from '../../../shared/hooks';
+import { useSwr } from '../../../shared/hooks/useSwr';
 import { commentSchema } from '../../../shared/schemas';
-import { BoardProps, CommentForm, CommentProps, UserProps } from '../../../shared/types';
+import { BoardProps, CommentForm, CommentProps, Paging } from '../../../shared/types';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
 });
 
-interface Props {
-  initialUser?: UserProps;
-  initialBoard?: BoardProps;
-  initialComments: CommentProps[];
-}
+export const getStaticPaths: GetStaticPaths = async () => {
+  const res = await fetch(BOARD_URL.BASE_BOARD);
+  const boards: Paging<BoardProps> = await res.json();
 
-const BoardPage: NextPage<Props> = ({ initialUser, initialBoard, initialComments }) => {
+  const paths = boards.content.map((board) => ({
+    params: { id: board.boardId.toString() }
+  }));
+
+  return { paths, fallback: true };
+};
+
+export const getStaticProps = async (ctx: GetStaticPropsContext) => {
+  const [a, b] = await Promise.allSettled([
+    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.params?.id}`),
+    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.params?.id}/comment`)
+  ]);
+
+  const initialBoard: BoardProps | undefined = a.status === 'fulfilled' ? a.value.data : undefined;
+  const initialComments: CommentProps[] | undefined = b.status === 'fulfilled' ? b.value.data : undefined;
+
+  return {
+    revalidate: true,
+    props: {
+      initialBoard,
+      initialComments
+    }
+  };
+};
+
+const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const { user } = useUser({
-    initialUser
-  });
-  const { data: board } = useSWR(`${BOARD_URL.BASE_BOARD}/${router.query.id}`, {
-    initialData: initialBoard
+  const { user } = useUser({});
+  const { data: board } = useSwr(`${BOARD_URL.BASE_BOARD}/${router.query.id}`, {
+    initialData: initialBoard,
+    revalidateOnMount: true
   });
 
-  const { data: comments, mutate: mutateComments } = useSWR(`${BOARD_URL.BASE_BOARD}/${router.query.id}/comment`, {
-    initialData: initialComments
+  const { data: comments, mutate: mutateComments } = useSwr(`${BOARD_URL.BASE_BOARD}/${router.query.id}/comment`, {
+    initialData: initialComments,
+    revalidateOnMount: true
   });
 
   const handleSubmitComment = async (form: CommentForm) => {
@@ -184,19 +206,15 @@ const BoardPage: NextPage<Props> = ({ initialUser, initialBoard, initialComments
             )}
           </HForm>
           <FlexBox direction={'column'}>
-            {comments ? (
-              comments.map((comment, idx) => (
-                <BaseComment
-                  key={idx}
-                  comment={comment}
-                  currentUserId={user?.userId}
-                  handleEdit={onClickEditComment}
-                  handleDelete={onClickDeleteComment}
-                />
-              ))
-            ) : (
-              <p>Refetching...</p>
-            )}
+            {comments?.map((comment, idx) => (
+              <BaseComment
+                key={idx}
+                comment={comment}
+                currentUserId={user?.userId}
+                handleEdit={onClickEditComment}
+                handleDelete={onClickDeleteComment}
+              />
+            ))}
           </FlexBox>
         </div>
       </FlexBox>
@@ -204,28 +222,28 @@ const BoardPage: NextPage<Props> = ({ initialUser, initialBoard, initialComments
   );
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
-  const initialUser = ctx.req.session.get('initialUser') || null;
-  let initialBoards = null;
-  let initialComments = null;
-
-  await Promise.allSettled([
-    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.query.id}`),
-    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.query.id}/comment`)
-  ]).then(
-    axios.spread((...response) => {
-      initialBoards = response[0].status === 'fulfilled' ? response[0].value.data : null;
-      initialComments = response[1].status === 'fulfilled' ? response[1].value.data : null;
-    })
-  );
-
-  return {
-    props: {
-      initialUser,
-      initialBoards,
-      initialComments
-    }
-  };
-});
+// export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
+//   const initialUser = ctx.req.session.get('initialUser') || null;
+//   let initialBoards = null;
+//   let initialComments = null;
+//
+//   await Promise.allSettled([
+//     axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.query.id}`),
+//     axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.query.id}/comment`)
+//   ]).then(
+//     axios.spread((...response) => {
+//       initialBoards = response[0].status === 'fulfilled' ? response[0].value.data : null;
+//       initialComments = response[1].status === 'fulfilled' ? response[1].value.data : null;
+//     })
+//   );
+//
+//   return {
+//     props: {
+//       initialUser,
+//       initialBoards,
+//       initialComments
+//     }
+//   };
+// });
 
 export default BoardPage;
