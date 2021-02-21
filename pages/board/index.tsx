@@ -5,65 +5,46 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery, stringify } from 'querystring';
 import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { cache } from 'swr';
+import useSWR from 'swr';
 
 import { CircleIconButton, FlexBox } from '../../components/atoms';
 import { BaseCard } from '../../components/molecules';
 import { Layout } from '../../components/templates/Layout';
-import { BOARD_URL, BoardProps, CategoryProps, Paging, useUser } from '../../shared';
+import { BOARD_URL, IBoard, ICategory, Paging, useAuth } from '../../shared';
 import { useSwr } from '../../shared/hooks/useSwr';
 
 interface Props {
   serverQuery: ParsedUrlQuery;
-  initialBoards?: Paging<BoardProps>;
-  initialCategories?: CategoryProps[];
+  initialBoards?: Paging<IBoard>;
 }
 
 const initialBoardsKey = BOARD_URL.BASE_BOARD as string;
-const initialCategoriesKey = BOARD_URL.BASE_CATEGORY as string;
 
 export const getStaticProps: GetStaticProps = async () => {
   let initialBoards = null;
-  let initialCategories = null;
-  await Promise.allSettled([axios.get(initialBoardsKey), axios.get(initialCategoriesKey)]).then(([a, b]) => {
+  await Promise.allSettled([axios.get(initialBoardsKey)]).then(([a]) => {
     initialBoards = a.status === 'fulfilled' ? a.value.data : null;
-    initialCategories = b.status === 'fulfilled' ? b.value.data : null;
   });
-
-  // if (!data) {
-  //   return {
-  //     redirect: {
-  //       destination: '/',
-  //       permanent: false
-  //     }
-  //   };
-  // }
 
   return {
     props: {
-      initialBoards,
-      initialCategories
+      initialBoards
     } // will be passed to the page component as props
   };
 };
 
-const BoardsPage: NextPage<Props> = ({ initialBoards, initialCategories }) => {
+const BoardsPage: NextPage<Props> = ({ initialBoards }) => {
   const [key, setKey] = useState(initialBoardsKey);
   const [keyword, setKeyword] = useState('');
   const router = useRouter();
-  const { user } = useUser({
-    redirectIfFound: false
-  });
+  const { isLoggedIn } = useAuth();
 
   const { data: boards } = useSwr(key, {
     initialData: initialBoardsKey == key ? initialBoards : undefined,
     revalidateOnMount: true
   });
 
-  const { data: categories } = useSwr(BOARD_URL.BASE_CATEGORY, {
-    initialData: initialCategories,
-    revalidateOnMount: true
-  });
+  const { data: categories } = useSWR<ICategory[]>(BOARD_URL.BASE_CATEGORY);
 
   const handlePagination = useCallback(
     (page: { selected: number }) => {
@@ -126,10 +107,8 @@ const BoardsPage: NextPage<Props> = ({ initialBoards, initialCategories }) => {
     }
   }, [router.query]);
 
-  console.log(cache);
-
   return (
-    <Layout isLoggedIn={user.isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn}>
       <FlexBox>
         {categories && (
           <select
@@ -140,7 +119,7 @@ const BoardsPage: NextPage<Props> = ({ initialBoards, initialCategories }) => {
             onChange={handleCategoryName}
             defaultValue={router.query.categoryName}>
             <option value={'all'}>All</option>
-            {categories.map((category: CategoryProps) => (
+            {categories.map((category) => (
               <option key={category.categoryId} value={category.name}>
                 {category.name}
               </option>
@@ -158,7 +137,7 @@ const BoardsPage: NextPage<Props> = ({ initialBoards, initialCategories }) => {
       </FlexBox>
       <FlexBox direction={'column'}>
         {boards &&
-          boards.content.map((board: BoardProps) => (
+          boards.content.map((board: IBoard) => (
             <BaseCard
               key={board.boardId}
               id={board.boardId}
@@ -185,36 +164,11 @@ const BoardsPage: NextPage<Props> = ({ initialBoards, initialCategories }) => {
           activeClassName={'active'}
         />
       )}
-      {user.isLoggedIn && (
+      {isLoggedIn && (
         <CircleIconButton icon={'AiTwotoneEdit'} color={'#4f4f4f'} onClick={() => router.push('/board/create')} />
       )}
     </Layout>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps<Props> = withSession(async (ctx) => {
-//   const initialUser = ctx.req.session.get('initialUser') || null;
-//   let initialBoards = null;
-//   let initialCategories = null;
-//
-//   await Promise.allSettled([
-//     axios.get(`${BOARD_URL.BASE_BOARD}?${stringify(ctx.query)}`),
-//     axios.get(`${BOARD_URL.BASE_CATEGORY}`)
-//   ]).then(
-//     axios.spread((...response) => {
-//       initialBoards = response[0].status === 'fulfilled' ? response[0].value.data : null;
-//       initialCategories = response[1].status === 'fulfilled' ? response[1].value.data : null;
-//     })
-//   );
-//
-//   return {
-//     props: {
-//       serverQuery: ctx.query,
-//       initialUser,
-//       initialBoards,
-//       initialCategories
-//     }
-//   };
-// });
 
 export default BoardsPage;

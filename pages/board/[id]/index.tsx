@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { RiMoreLine } from 'react-icons/ri';
+import useSWR from 'swr';
 
 import { H1, IconButton, Span } from '../../../components/atoms';
 import { FlexBox } from '../../../components/atoms/FlexBox';
@@ -25,10 +26,10 @@ import {
   editCommentAction
 } from '../../../shared/actions';
 import { BOARD_URL } from '../../../shared/enums';
-import { useUser } from '../../../shared/hooks';
+import { useAlertContext, useAuth } from '../../../shared/hooks';
 import { useSwr } from '../../../shared/hooks/useSwr';
 import { commentSchema } from '../../../shared/schemas';
-import { BoardProps, CommentForm, CommentProps, Paging } from '../../../shared/types';
+import { CommentForm, IBoard, IComment, Paging } from '../../../shared/types';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
@@ -36,81 +37,120 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(BOARD_URL.BASE_BOARD);
-  const boards: Paging<BoardProps> = await res.json();
+  const boards: Paging<IBoard> = await res.json();
 
   const paths = boards.content.map((board) => ({
-    params: { id: board.boardId.toString() }
+    params: { id: board?.boardId.toString() }
   }));
 
   return { paths, fallback: true };
 };
 
 export const getStaticProps = async (ctx: GetStaticPropsContext) => {
-  const [a, b] = await Promise.allSettled([
-    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.params?.id}`),
-    axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.params?.id}/comment`)
-  ]);
+  const [a] = await Promise.allSettled([axios.get(`${BOARD_URL.BASE_BOARD}/${ctx.params?.id}`)]);
 
-  const initialBoard: BoardProps | undefined = a.status === 'fulfilled' ? a.value.data : undefined;
-  const initialComments: CommentProps[] | undefined = b.status === 'fulfilled' ? b.value.data : undefined;
+  const initialBoard: IBoard | undefined = a.status === 'fulfilled' ? a.value.data : undefined;
 
   return {
-    revalidate: true,
+    revalidate: 1,
     props: {
-      initialBoard,
-      initialComments
+      initialBoard
     }
   };
 };
 
-const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const { user } = useUser({});
+  const { setError } = useAlertContext();
+  const { auth, isLoggedIn } = useAuth();
   const { data: board } = useSwr(`${BOARD_URL.BASE_BOARD}/${router.query.id}`, {
-    initialData: initialBoard,
-    revalidateOnMount: true
+    initialData: initialBoard
   });
 
-  const { data: comments, mutate: mutateComments } = useSwr(`${BOARD_URL.BASE_BOARD}/${router.query.id}/comment`, {
-    initialData: initialComments,
-    revalidateOnMount: true
-  });
+  const { data: comments, mutate: mutateComments } = useSWR<IComment[]>(
+    `${BOARD_URL.BASE_BOARD}/${router.query.id}/comment`
+  );
 
-  const handleSubmitComment = async (form: CommentForm) => {
-    const currentCache = comments || [];
-    mutateComments([{ text: form.text } as CommentProps, ...currentCache], false);
-    const res = await createCommentAction(Number(router.query.id), form);
-    mutateComments([res.data, ...currentCache], false);
+  const deleteBoard = async () => {
+    try {
+      await deleteBoardAction(Number(router.query.id));
+      router.push('/board');
+    } catch (error) {
+      setError({
+        type: 'error',
+        status: error?.response.status,
+        message: '게시물 삭제 에러입니다.'
+      });
+    }
   };
 
-  const onClickDeleteBoard = async () => {
-    await deleteBoardAction(Number(router.query.id));
-    router.push('/board');
+  const createComment = async (form: CommentForm) => {
+    const commentId = new Date().getTime();
+    const originalCache = comments || [];
+    mutateComments([{ commentId, text: form.text } as IComment, ...originalCache], false);
+    try {
+      const res = await createCommentAction(Number(router.query.id), {
+        ...form,
+        depth: 1,
+        parent: null
+      });
+      mutateComments([res.data, ...originalCache], false);
+    } catch (error) {
+      setError({
+        type: 'error',
+        status: error?.response.status,
+        message: '댓글 작성 에러입니다.'
+      });
+      mutateComments(originalCache, false);
+    }
   };
 
-  const onClickDeleteComment = async (commentId: number) => {
-    await deleteCommentAction(Number(router.query.id), commentId);
-    mutateComments(
-      comments?.filter((co) => co.commentId != commentId),
-      false
-    );
-  };
-
-  const onClickEditComment = async (commentId: number, form: CommentForm) => {
-    const currentCache = comments || [];
-    const updatedCache = currentCache.map((co) => (co.commentId === commentId ? { ...co, text: form.text } : co));
+  const editComment = async (commentId: number, form: CommentForm) => {
+    const originalCache = comments || [];
+    const updatedCache = originalCache.map((co) => (co.commentId === commentId ? { ...co, text: form.text } : co));
     mutateComments([...updatedCache], false);
-    const res = await editCommentAction(Number(router.query.id), commentId, form);
-    const realData = updatedCache.map((co) => (co.commentId === commentId ? { ...res.data } : co));
-    mutateComments([...realData], false);
+    try {
+      const res = await editCommentAction(Number(router.query.id), commentId, form);
+      const realData = updatedCache.map((co) => (co.commentId === commentId ? { ...res.data } : co));
+      mutateComments([...realData], false);
+      return false;
+    } catch (error) {
+      setError({
+        type: 'error',
+        status: error?.response.status,
+        message: '댓글 수정 에러입니다.'
+      });
+      mutateComments(originalCache, false);
+      return true;
+    }
   };
 
-  if (!board) return null;
+  const deleteComment = async (commentId: number) => {
+    const originalCache = comments || [];
+    const filteredCache = originalCache.filter((co) => co.commentId != commentId);
+    mutateComments(filteredCache, false);
+    try {
+      await deleteCommentAction(Number(router.query.id), commentId);
+    } catch (error) {
+      setError({
+        type: 'error',
+        status: error?.response.status,
+        message: '댓글 삭제 에러입니다.'
+      });
+      mutateComments(originalCache, false);
+    }
+  };
 
-  const isAuthor: boolean = board.userId == user.userId;
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
+  const isAuthor: boolean = board?.userId == auth?.userId;
+
+  console.log(comments);
 
   return (
-    <Layout isLoggedIn={user.isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn}>
       <FlexBox direction={'column'} gap={24}>
         <FlexBox
           direction={'column'}
@@ -128,14 +168,14 @@ const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<ty
             css={css`
               text-align: center;
             `}>
-            {board.categoryName}
+            {board?.categoryName}
           </Body>
           <H1
             css={css`
               font-size: 3rem;
               text-align: center;
             `}>
-            {board.title}
+            {board?.title}
           </H1>
         </FlexBox>
         <FlexBox
@@ -149,13 +189,13 @@ const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<ty
               css={css`
                 color: rgb(90, 90, 90);
               `}>
-              {board.username}
+              {board?.username}
             </Span>
             <Span
               css={css`
                 color: rgb(152, 152, 152);
               `}>
-              {board.createdAt}
+              {board?.createdAt}
             </Span>
           </FlexBox>
           {isAuthor && (
@@ -164,8 +204,8 @@ const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<ty
                 menuPosition={'left'}
                 button={<RiMoreLine size={'2rem'} />}
                 menus={[
-                  { text: 'Edit', url: `/board/${board.boardId}/edit` },
-                  { text: 'Delete', onClick: onClickDeleteBoard }
+                  { text: 'Edit', url: `/board/${board?.boardId}/edit` },
+                  { text: 'Delete', onClick: deleteBoard }
                 ]}
               />
             </FlexBox>
@@ -177,7 +217,7 @@ const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<ty
               border: none;
             }
           `}>
-          <QuillNoSSRWrapper theme="snow" readOnly modules={{ toolbar: false }} value={board.description} />
+          <QuillNoSSRWrapper theme="snow" readOnly modules={{ toolbar: false }} value={board?.description} />
         </div>
         <FlexBox vertical={'space-between'}>
           <FlexBox gap={8}>
@@ -186,33 +226,35 @@ const BoardPage = ({ initialBoard, initialComments }: InferGetStaticPropsType<ty
           </FlexBox>
         </FlexBox>
         <div>
-          <HForm onSubmit={handleSubmitComment} resolver={yupResolver(commentSchema)} mode={'onSubmit'}>
-            {({ register, errors }) => (
-              <FlexBox>
-                <FormItem
-                  errors={errors?.text?.message}
-                  css={css`
-                    flex: 1;
-                  `}>
-                  <HInput ref={register} name={'text'} />
-                </FormItem>
-                <HInput
-                  type={'submit'}
-                  css={css`
-                    display: none;
-                  `}
-                />
-              </FlexBox>
-            )}
-          </HForm>
+          {isLoggedIn && (
+            <HForm onSubmit={createComment} resolver={yupResolver(commentSchema)} mode={'onSubmit'}>
+              {({ register, errors }) => (
+                <FlexBox>
+                  <FormItem
+                    errors={errors?.text?.message}
+                    css={css`
+                      flex: 1;
+                    `}>
+                    <HInput ref={register} name={'text'} />
+                  </FormItem>
+                  <HInput
+                    type={'submit'}
+                    css={css`
+                      display: none;
+                    `}
+                  />
+                </FlexBox>
+              )}
+            </HForm>
+          )}
           <FlexBox direction={'column'}>
             {comments?.map((comment, idx) => (
               <BaseComment
                 key={idx}
                 comment={comment}
-                currentUserId={user?.userId}
-                handleEdit={onClickEditComment}
-                handleDelete={onClickDeleteComment}
+                currentUserId={auth?.userId}
+                handleEdit={editComment}
+                handleDelete={deleteComment}
               />
             ))}
           </FlexBox>

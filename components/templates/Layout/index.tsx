@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import Head from 'next/head';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { FcReddit } from 'react-icons/fc';
 import { GiHamburgerMenu } from 'react-icons/gi';
@@ -11,9 +12,27 @@ import { Dropdown } from '../../molecules/Dropdown';
 interface Props {
   title?: string;
   isLoggedIn: boolean;
+  redirectTo?: string;
+  redirectIfFound?: boolean;
 }
 
-export const Layout: React.FC<Props> = ({ title = 'This is the default title', isLoggedIn, children }) => {
+export const Layout: React.FC<Props> = ({
+  title = 'This is the default title',
+  isLoggedIn,
+  redirectTo,
+  redirectIfFound,
+  children
+}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!redirectTo) return;
+
+    if ((redirectTo && !redirectIfFound && !isLoggedIn) || (redirectIfFound && isLoggedIn)) {
+      router.push(redirectTo);
+    }
+  }, [isLoggedIn, redirectIfFound, redirectTo]);
+
   return (
     <div>
       <Head>

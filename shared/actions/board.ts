@@ -1,19 +1,30 @@
 import axios from 'axios';
 
-export const createBoardAction = async (form: any): Promise<any> =>
-  await axios.post('http://localhost:8080/api/v1/board', form);
+import {
+  CreateBoardForm,
+  CreateCommentRequest,
+  IBoard,
+  IComment,
+  UpdateBoardForm,
+  UpdateCommentRequest
+} from '../types';
 
-export const editBoardAction = async (boardId: number, form: any): Promise<any> =>
-  await axios.patch(`http://localhost:8080/api/v1/board/${boardId}`, form);
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const deleteBoardAction = async (boardId: number): Promise<any> =>
-  await axios.delete(`http://localhost:8080/api/v1/board/${boardId}`);
+export const createBoardAction = (body: CreateBoardForm) =>
+  axios.post<IBoard>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board`, body);
 
-export const createCommentAction = async (boardId: number, form: any): Promise<any> =>
-  await axios.post(`http://localhost:8080/api/v1/board/${boardId}/comment`, form);
+export const editBoardAction = (boardId: number, body: UpdateBoardForm) =>
+  axios.patch<IBoard>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board/${boardId}`, body);
 
-export const deleteCommentAction = async (boardId: number, commentId: number): Promise<any> =>
-  await axios.delete(`http://localhost:8080/api/v1/board/${boardId}/comment/${commentId}`);
+export const deleteBoardAction = (boardId: number) =>
+  axios.delete<void>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board/${boardId}`);
 
-export const editCommentAction = async (boardId: number, commentId: number, form: any): Promise<any> =>
-  await axios.patch(`http://localhost:8080/api/v1/board/${boardId}/comment/${commentId}`, form);
+export const createCommentAction = (boardId: number, body: CreateCommentRequest) =>
+  axios.post<IComment>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board/${boardId}/comment`, body);
+
+export const deleteCommentAction = (boardId: number, commentId: number) =>
+  axios.delete<void>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board/${boardId}/comment/${commentId}`);
+
+export const editCommentAction = (boardId: number, commentId: number, body: UpdateCommentRequest) =>
+  axios.patch<IComment>(`${NEXT_PUBLIC_BASE_URL}/api/v1/board/${boardId}/comment/${commentId}`, body);

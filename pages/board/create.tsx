@@ -11,14 +11,22 @@ import { Controller } from 'react-hook-form';
 import { HForm, HInput, HSelect } from '../../components/atoms';
 import { FormItem } from '../../components/molecules';
 import { Layout } from '../../components/templates/Layout';
-import { BOARD_URL, CategoryProps, createBoardAction, CreateBoardForm, createBoardSchema, useUser } from '../../shared';
+import {
+  BOARD_URL,
+  createBoardAction,
+  CreateBoardForm,
+  createBoardSchema,
+  ICategory,
+  useAlertContext,
+  useAuth
+} from '../../shared';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
 });
 
 interface Props {
-  initialCategories?: CategoryProps[];
+  initialCategories?: ICategory[];
 }
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -39,21 +47,24 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const CreateBoardPage: NextPage<Props> = ({ initialCategories }) => {
   const router = useRouter();
-  const { user } = useUser({
-    redirectIfFound: false,
-    redirectTo: '/board'
-  });
+  const { setError } = useAlertContext();
+  const { isLoggedIn } = useAuth();
 
-  const handleSubmit = (form: CreateBoardForm) => {
-    createBoardAction(form)
-      .then(() => {
-        router.push('/board');
-      })
-      .catch((e) => console.log(e.response));
+  const handleSubmit = async (form: CreateBoardForm) => {
+    try {
+      const res = await createBoardAction(form);
+      router.push(`/board/${res.data.boardId}`);
+    } catch (error) {
+      setError({
+        message: '게시물 생성 에러입니다.',
+        status: error?.response.status,
+        type: 'error'
+      });
+    }
   };
 
   return (
-    <Layout isLoggedIn={user.isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn} redirectIfFound={false} redirectTo={'/board'}>
       <HForm onSubmit={handleSubmit} resolver={yupResolver(createBoardSchema)}>
         {({ register, control, errors }) => (
           <>

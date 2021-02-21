@@ -1,18 +1,4 @@
-export interface Paging<T> {
-  content: T[];
-  pageable: Pageable;
-  last: boolean;
-  totalPages: number;
-  totalElements: number;
-  numberOfElements: number;
-  first: boolean;
-  sort: Sort;
-  size: number;
-  number: number;
-  empty: boolean;
-}
-
-export interface BoardProps {
+export interface IBoard {
   boardId: number;
   title: string;
   description: string;
@@ -25,33 +11,29 @@ export interface BoardProps {
   updatedAt: Date;
 }
 
-export interface Pageable {
-  sort: Sort;
-  pageNumber: number;
-  pageSize: number;
-  offset: number;
-  unpaged: boolean;
-  paged: boolean;
-}
-
-export interface Sort {
-  sorted: boolean;
-  unsorted: boolean;
-  empty: boolean;
-}
-
-export interface CategoryProps {
+export interface ICategory {
   categoryId: number;
   name: string;
 }
 
-export interface CommentProps {
+export interface IComment {
   commentId: number;
   text: string;
   userId: number;
   username: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IComment {
+  commentId: number;
+  text: string;
+  userId: number;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+  parent: null;
+  depth: number;
 }
 
 export interface CreateBoardForm {
@@ -62,6 +44,19 @@ export interface CreateBoardForm {
 
 export interface UpdateBoardForm extends Partial<CreateBoardForm> {}
 
+export interface CommentRequest {
+  text: string;
+  depth: number;
+  parent: number | null;
+}
+
 export interface CommentForm {
   text: string;
 }
+
+export interface CreateCommentRequest extends CommentForm {
+  parent: number | null;
+  depth: number;
+}
+
+export interface UpdateCommentRequest extends CommentForm {}

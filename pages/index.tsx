@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 
 import { Layout } from '../components/templates/Layout';
-import { useAuth } from '../shared/hooks/useAuth';
+import { useAuth } from '../shared';
 
 interface Props {}
 

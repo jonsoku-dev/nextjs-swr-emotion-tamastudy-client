@@ -1,23 +1,19 @@
-export interface UserProps {
-  isLoggedIn: boolean;
-  token?: string;
-  email?: string;
-  username?: string;
-  userId?: number;
-}
-
 export interface IUser {
   email: string;
   username: string;
   userId: number;
 }
 
-export interface UserLoginForm {
+export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface UserJoinForm {
+export interface LoginResponse {
+  token: string;
+}
+
+export interface JoinRequest {
   email: string;
   password: string;
   username: string;

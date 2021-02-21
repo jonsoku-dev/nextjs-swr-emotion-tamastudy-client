@@ -4,31 +4,23 @@ import { NextPage } from 'next';
 import React, { useState } from 'react';
 import { AiFillAmazonCircle } from 'react-icons/ai';
 
-import { CommentForm, CommentProps, commentSchema } from '../../../shared';
+import { CommentForm, commentSchema, IComment } from '../../../shared';
 import { Button, FlexBox, HForm, HInput, Span } from '../../atoms';
 import { FormItem } from '../FormItem';
 
 interface Props {
-  comment: CommentProps;
+  comment: IComment;
   currentUserId?: number;
-  handleEdit: (commentId: number, form: CommentForm) => Promise<void>;
+  handleEdit: (commentId: number, form: CommentForm) => Promise<boolean>;
   handleDelete: (commentId: number) => Promise<void>;
 }
 
 export const BaseComment: NextPage<Props> = ({ comment, currentUserId, handleEdit, handleDelete }) => {
   const [editMode, setEditMode] = useState(false);
 
-  const onClickEditButton = () => {
-    setEditMode(true);
-  };
-
-  const onClickDeleteButton = () => {
-    handleDelete(comment.commentId);
-  };
-
-  const handleSubmit = (form: CommentForm) => {
-    handleEdit(comment.commentId, form).then(() => setEditMode(false));
-  };
+  const onClickEditButton = () => setEditMode(true);
+  const onClickDeleteButton = () => handleDelete(comment.commentId);
+  const handleSubmit = (form: CommentForm) => handleEdit(comment.commentId, form).then(setEditMode);
 
   const isAuthor: boolean = comment.userId == currentUserId;
 
