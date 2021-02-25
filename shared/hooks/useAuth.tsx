@@ -1,16 +1,18 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { loadGetInitialProps } from 'next/dist/next-server/lib/utils';
 import Router from 'next/router';
-import React, { useCallback, useContext, useState } from 'react';
-import { Cookies } from 'react-cookie';
-import useSWR, { cache } from 'swr';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { mutateCallback } from 'swr/dist/types';
 
+import fetchJson from '../../lib/fetchJson';
+import { checkTokenExpired } from '../actions';
 import { API_URL } from '../enums';
-import { IUser, JoinRequest, LoginRequest, LoginResponse } from '../types';
+import { IUser, JoinRequest, LoginRequest, UserLoginResponse } from '../types';
+import { IS_SERVER } from '../utils';
 import { useAlertContext } from './useAlertContext';
 
 interface ContextInterface {
-  token: string | null;
   isLoggedIn: boolean;
   auth: IUser | undefined;
   mutateAuth: (
@@ -24,38 +26,55 @@ interface ContextInterface {
 
 export const AuthStateContext = React.createContext({} as ContextInterface);
 
-const cookies = new Cookies();
-
-export const AuthProvider = ({ children }: { children: (token: string | null) => React.ReactNode }) => {
+export const AuthProvider: React.FC = ({ children }) => {
+  const [token, setToken] = useState((!IS_SERVER && localStorage.getItem('token')) || null);
   const { setError } = useAlertContext();
-  const [token, setToken] = useState<string | null>(cookies.get('token') ?? null);
   const { data: auth, mutate: mutateAuth } = useSWR<IUser>(
-    token ? API_URL.AUTHENTICATE : null,
-    (url) =>
-      axios
+    ['http://localhost:8080/api/v1/user/authenticate', token],
+    (url: string, token: string | null) => {
+      return axios
         .get(url, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
-        .then((res) => res.data),
-    {
-      onError(error) {
-        setError({ message: '인증 에러입니다.', status: error.response?.status, type: 'error' });
-        clearAuth();
-      }
+        .then((res) => res.data);
     }
   );
 
   const login = useCallback(async (form: LoginRequest) => {
     try {
-      const response = await axios.post<LoginResponse>(API_URL.LOGIN, form);
-      cookies.set('token', response.data.token);
-      setToken(response.data.token);
+      const res = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/login', form);
+      if (!IS_SERVER) {
+        onLoginSuccess(res);
+      }
+    } catch (error) {
+      console.log(error);
+      setError({ message: '로그인 에러입니다.', status: error.response?.status, type: 'error' });
+    }
+  }, []);
+
+  const refresh = useCallback(async () => {
+    try {
+      const res = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh');
+      if (!IS_SERVER) {
+        onLoginSuccess(res);
+      }
+    } catch (error) {
+      console.log(error);
+      setError({ message: 'Token refresh 에러입니다.', status: error.response?.status, type: 'error' });
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await axios.post<void>('http://localhost:8080/api/v1/user/logout');
+      if (!IS_SERVER) {
+        onClear();
+      }
       Router.push('/');
     } catch (error) {
-      setError({ message: '로그인 에러입니다.', status: error.response?.status, type: 'error' });
-      clearAuth();
+      setError({ message: '로그아웃 에러입니다.', status: error.response?.status, type: 'error' });
     }
   }, []);
 
@@ -65,27 +84,66 @@ export const AuthProvider = ({ children }: { children: (token: string | null) =>
       Router.push('/login');
     } catch (error) {
       setError({ message: '회원가입 에러입니다.', status: error.response?.status, type: 'error' });
-      clearAuth();
     }
   }, []);
 
-  const logout = useCallback(async () => {
-    if (auth) {
-      clearAuth();
-    }
-  }, [auth]);
+  const onLoginSuccess = (res: AxiosResponse<UserLoginResponse>) => {
+    localStorage.setItem('token', res.data.token);
+    setToken(res.data.token);
+    axios.defaults.headers['Authorization'] = `Bearer ${res.data.token}`;
+  };
 
-  const clearAuth = useCallback(() => {
-    cache.delete(API_URL.AUTHENTICATE);
-    cookies.remove('token');
-    setToken(null);
-    delete axios.defaults.headers['Authorization'];
-  }, []);
+  const onLoginSuccess2 = (data: UserLoginResponse) => {
+    localStorage.setItem('token', data.token);
+    setToken(data.token);
+    axios.defaults.headers['Authorization'] = `Bearer ${data.token}`;
+  };
+
+  const onClear = () => {
+    localStorage.removeItem('token');
+    setToken('');
+    axios.defaults.headers['Authorization'] = null;
+  };
+
+  useEffect(() => {
+    const resInterceptor = axios.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      async function (error) {
+        const originalRequest = error.config;
+        if (error.response?.status === 401) {
+          if (error.response.data.message === 'Unauthorized') {
+            if (!IS_SERVER) {
+              const token = localStorage.getItem('token');
+              if (token) {
+                originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                if (checkTokenExpired(token)) {
+                  console.log(':(');
+                  return axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh').then((res) => {
+                    onLoginSuccess(res);
+                    return axios(originalRequest); // retry
+                  });
+                }
+              }
+            }
+          } else {
+            console.log('????');
+            onClear();
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      // remove all intercepts when done
+      axios.interceptors.response.eject(resInterceptor);
+    };
+  }, [token, auth]);
 
   return (
     <AuthStateContext.Provider
       value={{
-        token,
         isLoggedIn: !!auth,
         auth,
         mutateAuth,
@@ -93,7 +151,7 @@ export const AuthProvider = ({ children }: { children: (token: string | null) =>
         join,
         logout
       }}>
-      {children(token)}
+      {children}
     </AuthStateContext.Provider>
   );
 };

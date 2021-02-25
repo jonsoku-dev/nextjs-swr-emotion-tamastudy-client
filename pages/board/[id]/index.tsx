@@ -29,18 +29,18 @@ import { BOARD_URL } from '../../../shared/enums';
 import { useAlertContext, useAuth } from '../../../shared/hooks';
 import { useSwr } from '../../../shared/hooks/useSwr';
 import { commentSchema } from '../../../shared/schemas';
-import { CommentForm, IBoard, IComment, Paging } from '../../../shared/types';
+import { BoardIdsResponse, CommentForm, IBoard, IComment } from '../../../shared/types';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
 });
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch(BOARD_URL.BASE_BOARD);
-  const boards: Paging<IBoard> = await res.json();
+  const res = await fetch(BOARD_URL.BASE_BOARD_IDS);
+  const boardIds: BoardIdsResponse[] = await res.json();
 
-  const paths = boards.content.map((board) => ({
-    params: { id: board?.boardId.toString() }
+  const paths = boardIds.map((data) => ({
+    params: { id: data.boardId.toString() }
   }));
 
   return { paths, fallback: true };
@@ -89,11 +89,7 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
     const originalCache = comments || [];
     mutateComments([{ commentId, text: form.text } as IComment, ...originalCache], false);
     try {
-      const res = await createCommentAction(Number(router.query.id), {
-        ...form,
-        depth: 1,
-        parent: null
-      });
+      const res = await createCommentAction(Number(router.query.id), form);
       mutateComments([res.data, ...originalCache], false);
     } catch (error) {
       setError({
@@ -249,13 +245,47 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
           )}
           <FlexBox direction={'column'}>
             {comments?.map((comment, idx) => (
-              <BaseComment
+              <FlexBox
                 key={idx}
-                comment={comment}
-                currentUserId={auth?.userId}
-                handleEdit={editComment}
-                handleDelete={deleteComment}
-              />
+                direction={'column'}
+                css={css`
+                  border: 1px solid red;
+                `}>
+                <BaseComment
+                  comment={comment}
+                  currentUserId={auth?.userId}
+                  handleEdit={editComment}
+                  handleDelete={deleteComment}
+                />
+                <FlexBox
+                  direction={'column'}
+                  css={css`
+                    margin-left: 32px;
+                  `}>
+                  <p>답글 쓰기</p>
+                  {isLoggedIn && (
+                    <HForm onSubmit={createComment} resolver={yupResolver(commentSchema)} mode={'onSubmit'}>
+                      {({ register, errors }) => (
+                        <FlexBox>
+                          <FormItem
+                            errors={errors?.text?.message}
+                            css={css`
+                              flex: 1;
+                            `}>
+                            <HInput ref={register} name={'text'} />
+                          </FormItem>
+                          <HInput
+                            type={'submit'}
+                            css={css`
+                              display: none;
+                            `}
+                          />
+                        </FlexBox>
+                      )}
+                    </HForm>
+                  )}
+                </FlexBox>
+              </FlexBox>
             ))}
           </FlexBox>
         </div>

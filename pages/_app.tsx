@@ -5,39 +5,44 @@ import React from 'react';
 import { SWRConfig } from 'swr';
 
 import { ErrorBoundary } from '../components/templates';
-import { APIErrorProvider, AuthProvider, GlobalStyle, theme } from '../shared';
+import { APIErrorProvider, AuthProvider, GlobalStyle, IS_SERVER, theme } from '../shared';
+
+axios.defaults.withCredentials = true;
+axios.defaults.headers['Authorization'] = IS_SERVER ? null : `Bearer ${localStorage.getItem('token')}`;
+
+axios.interceptors.request.use(
+  function (config) {
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <APIErrorProvider>
-      <AuthProvider>
-        {(token) => {
-          if (token) {
-            axios.defaults.headers['Authorization'] = `Bearer ${token}`;
-          }
-          return (
-            <SWRConfig
-              value={{
-                fetcher: async (url: string, queries: any) => {
-                  const res = await axios.get(queries ? `${url}?${queries}` : url);
-                  return res.data;
-                },
-                revalidateOnFocus: false,
-                revalidateOnReconnect: false,
-                shouldRetryOnError: false,
-                refreshInterval: 0
-                // revalidateOnMount: true
-              }}>
-              <ThemeProvider theme={theme}>
-                <GlobalStyle />
-                <Component {...pageProps} />
-                <ErrorBoundary />
-              </ThemeProvider>
-            </SWRConfig>
-          );
-        }}
-      </AuthProvider>
-    </APIErrorProvider>
+    <SWRConfig
+      value={{
+        fetcher: async (url: string, queries: any) => {
+          const res = await axios.get(queries ? `${url}?${queries}` : url);
+          return res.data;
+        },
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        shouldRetryOnError: false,
+        refreshInterval: 0
+        // revalidateOnMount: true
+      }}>
+      <APIErrorProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <Component {...pageProps} />
+            <ErrorBoundary />
+          </ThemeProvider>
+        </AuthProvider>
+      </APIErrorProvider>
+    </SWRConfig>
   );
 };
 

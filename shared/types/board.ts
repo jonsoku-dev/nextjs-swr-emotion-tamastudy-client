@@ -1,3 +1,7 @@
+export interface BoardIdsResponse {
+  boardId: number;
+}
+
 export interface IBoard {
   boardId: number;
   title: string;
@@ -32,8 +36,6 @@ export interface IComment {
   username: string;
   createdAt: Date;
   updatedAt: Date;
-  parent: null;
-  depth: number;
 }
 
 export interface CreateBoardForm {
@@ -46,17 +48,12 @@ export interface UpdateBoardForm extends Partial<CreateBoardForm> {}
 
 export interface CommentRequest {
   text: string;
-  depth: number;
-  parent: number | null;
 }
 
 export interface CommentForm {
   text: string;
 }
 
-export interface CreateCommentRequest extends CommentForm {
-  parent: number | null;
-  depth: number;
-}
+export interface CreateCommentRequest extends CommentForm {}
 
 export interface UpdateCommentRequest extends CommentForm {}

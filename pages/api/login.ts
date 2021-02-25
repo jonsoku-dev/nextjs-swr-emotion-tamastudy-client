@@ -1,30 +1,17 @@
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { UserProps, withSession } from '../../shared';
+import withSession from '../../lib/session';
+import { UserLoginResponse } from '../../shared/types';
 
 export default withSession(async (req: NextApiRequest, res: NextApiResponse) => {
-  const loginUrl = `http://localhost:8080/api/v1/user/login`;
-  const authUrl = `http://localhost:8080/api/v1/user/authenticate`;
   try {
-    // we check that the user exists on GitHub and store some data in session
-    const { data: loginData } = await axios.post(loginUrl, req.body);
-    const token = loginData.token;
-
-    axios.create({
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const { data: authData } = await axios.get(authUrl);
-
-    const initialUser: UserProps = { isLoggedIn: true, token, ...authData };
-    req.session.set('initialUser', initialUser);
+    const { data } = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/login', req.body);
+    req.session.set('login', data);
     await req.session.save();
-    res.json(initialUser);
+    res.json(data);
   } catch (error) {
+    console.log(error);
     const { response: fetchResponse } = error;
     res.status(fetchResponse?.status || 500).json(error.data);
   }
