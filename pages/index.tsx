@@ -7,7 +7,7 @@ import { createBoardAction, useAuth } from '../shared';
 interface Props {}
 
 const IndexPage: NextPage<Props> = () => {
-  const { auth, isLoggedIn, login, logout } = useAuth();
+  const { user, login, logout } = useAuth();
 
   const handleSubmit = async () => {
     try {
@@ -32,7 +32,7 @@ const IndexPage: NextPage<Props> = () => {
   };
 
   return (
-    <Layout isLoggedIn={isLoggedIn}>
+    <Layout isLoggedIn={user.isLoggedIn}>
       <button
         onClick={() =>
           login({
@@ -45,7 +45,7 @@ const IndexPage: NextPage<Props> = () => {
       <button onClick={logout}>logout</button>
       <button onClick={handleSubmit}>handleSubmit</button>
       <button onClick={handleRefresh}>handleRefresh</button>
-      auth: ${JSON.stringify(auth)}
+      auth: ${JSON.stringify(user)}
     </Layout>
   );
 };

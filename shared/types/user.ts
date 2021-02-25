@@ -8,9 +8,7 @@ export interface UserProps {
 
 export interface IUser {
   isLoggedIn: boolean;
-  email?: string;
-  username?: string;
-  userId?: number;
+  userId: number | null;
 }
 
 export interface LoginRequest {

@@ -1,11 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { loadGetInitialProps } from 'next/dist/next-server/lib/utils';
 import Router from 'next/router';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { mutateCallback } from 'swr/dist/types';
 
-import fetchJson from '../../lib/fetchJson';
 import { checkTokenExpired } from '../actions';
 import { API_URL } from '../enums';
 import { IUser, JoinRequest, LoginRequest, UserLoginResponse } from '../types';
@@ -13,12 +9,7 @@ import { IS_SERVER } from '../utils';
 import { useAlertContext } from './useAlertContext';
 
 interface ContextInterface {
-  isLoggedIn: boolean;
-  auth: IUser | undefined;
-  mutateAuth: (
-    data?: IUser | Promise<IUser> | mutateCallback<IUser> | undefined,
-    shouldRevalidate?: boolean | undefined
-  ) => Promise<IUser | undefined>;
+  user: IUser;
   login: (form: LoginRequest) => Promise<void>;
   join: (form: JoinRequest) => Promise<void>;
   logout: () => Promise<void>;
@@ -27,20 +18,11 @@ interface ContextInterface {
 export const AuthStateContext = React.createContext({} as ContextInterface);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState((!IS_SERVER && localStorage.getItem('token')) || null);
   const { setError } = useAlertContext();
-  const { data: auth, mutate: mutateAuth } = useSWR<IUser>(
-    ['http://localhost:8080/api/v1/user/authenticate', token],
-    (url: string, token: string | null) => {
-      return axios
-        .get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then((res) => res.data);
-    }
-  );
+  const [user, setUser] = useState<IUser>({
+    isLoggedIn: false,
+    userId: null
+  });
 
   const login = useCallback(async (form: LoginRequest) => {
     try {
@@ -89,23 +71,38 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const onLoginSuccess = (res: AxiosResponse<UserLoginResponse>) => {
     localStorage.setItem('token', res.data.token);
-    setToken(res.data.token);
     axios.defaults.headers['Authorization'] = `Bearer ${res.data.token}`;
-  };
-
-  const onLoginSuccess2 = (data: UserLoginResponse) => {
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
-    axios.defaults.headers['Authorization'] = `Bearer ${data.token}`;
+    setUser((prev) => ({
+      ...prev,
+      isLoggedIn: true,
+      userId: res.data.id as number
+    }));
   };
 
   const onClear = () => {
     localStorage.removeItem('token');
-    setToken('');
     axios.defaults.headers['Authorization'] = null;
+    setUser((prev) => ({
+      ...prev,
+      isLoggedIn: false,
+      userId: null
+    }));
   };
 
   useEffect(() => {
+    const reqInterceptor = axios.interceptors.request.use(
+      function (config) {
+        if (!IS_SERVER) {
+          const token = localStorage.getItem('token');
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+      },
+      async function (error) {
+        return Promise.reject(error);
+      }
+    );
+
     const resInterceptor = axios.interceptors.response.use(
       function (response) {
         return response;
@@ -128,7 +125,6 @@ export const AuthProvider: React.FC = ({ children }) => {
               }
             }
           } else {
-            console.log('????');
             onClear();
           }
         }
@@ -137,16 +133,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     );
     return () => {
       // remove all intercepts when done
+      axios.interceptors.request.eject(reqInterceptor);
       axios.interceptors.response.eject(resInterceptor);
     };
-  }, [token, auth]);
+  }, []);
 
   return (
     <AuthStateContext.Provider
       value={{
-        isLoggedIn: !!auth,
-        auth,
-        mutateAuth,
+        user,
         login,
         join,
         logout
