@@ -14,28 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/fetchJson.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/session.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/authenticate.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/api/clear.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shared/actions/shared.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/login.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/logout.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/user.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/actions/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/actions/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/enums/urls.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/enums/urls.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/hocs/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/hocs/session.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/hooks/useAuth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useAuth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/types/board.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/types/board.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/types/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/types/user.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +93,8 @@
       <workItem from="1613102604447" duration="110498000" />
       <workItem from="1613485903847" duration="226000" />
       <workItem from="1613486143855" duration="218000" />
-      <workItem from="1613486377363" duration="132363000" />
+      <workItem from="1613486377363" duration="133023000" />
+      <workItem from="1614400913631" duration="5224000" />
     </task>
     <servers />
   </component>
@@ -202,7 +183,6 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/shared/enums/shared.ts</url>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

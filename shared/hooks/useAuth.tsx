@@ -26,9 +26,9 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const login = useCallback(async (form: LoginRequest) => {
     try {
-      const res = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/login', form);
+      const { data } = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/login', form);
       if (!IS_SERVER) {
-        onLoginSuccess(res);
+        onLoginSuccess(data);
       }
     } catch (error) {
       console.log(error);
@@ -36,23 +36,11 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, []);
 
-  const refresh = useCallback(async () => {
-    try {
-      const res = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh');
-      if (!IS_SERVER) {
-        onLoginSuccess(res);
-      }
-    } catch (error) {
-      console.log(error);
-      setError({ message: 'Token refresh 에러입니다.', status: error.response?.status, type: 'error' });
-    }
-  }, []);
-
   const logout = useCallback(async () => {
     try {
       await axios.post<void>('http://localhost:8080/api/v1/user/logout');
       if (!IS_SERVER) {
-        onClear();
+        onLoginClear();
       }
       Router.push('/');
     } catch (error) {
@@ -69,17 +57,17 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, []);
 
-  const onLoginSuccess = (res: AxiosResponse<UserLoginResponse>) => {
-    localStorage.setItem('token', res.data.token);
-    axios.defaults.headers['Authorization'] = `Bearer ${res.data.token}`;
+  const onLoginSuccess = (data: UserLoginResponse) => {
+    localStorage.setItem('token', data.token);
+    axios.defaults.headers['Authorization'] = `Bearer ${data.token}`;
     setUser((prev) => ({
       ...prev,
       isLoggedIn: true,
-      userId: res.data.id as number
+      userId: data.id as number
     }));
   };
 
-  const onClear = () => {
+  const onLoginClear = () => {
     localStorage.removeItem('token');
     axios.defaults.headers['Authorization'] = null;
     setUser((prev) => ({
@@ -108,25 +96,15 @@ export const AuthProvider: React.FC = ({ children }) => {
         return response;
       },
       async function (error) {
+        console.log(error.response);
         const originalRequest = error.config;
-        if (error.response?.status === 401) {
-          if (error.response.data.message === 'Unauthorized') {
-            if (!IS_SERVER) {
-              const token = localStorage.getItem('token');
-              if (token) {
-                originalRequest.headers['Authorization'] = `Bearer ${token}`;
-                if (checkTokenExpired(token)) {
-                  console.log(':(');
-                  return axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh').then((res) => {
-                    onLoginSuccess(res);
-                    return axios(originalRequest); // retry
-                  });
-                }
-              }
-            }
-          } else {
-            onClear();
-          }
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          const { data } = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh');
+          onLoginSuccess(data);
+          return axios(originalRequest);
+        } else if (error.response?.status == 403) {
+          onLoginClear();
         }
         return Promise.reject(error);
       }
