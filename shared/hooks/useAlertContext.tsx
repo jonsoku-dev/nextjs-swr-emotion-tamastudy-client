@@ -1,21 +1,20 @@
 import React, { useContext, useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-interface ErrorType {
+interface AlertType {
   id?: string;
-  status?: number;
   message: string;
   type: 'warn' | 'error' | 'info';
 }
 
-interface APIErrorContextProps {
-  errors: ErrorType[];
-  setError: (data: ErrorType) => void;
+interface APIAlertContextProps {
+  errors: AlertType[];
+  setAlert: (data: AlertType) => void;
 }
 
-const APIErrorContext = React.createContext({} as APIErrorContextProps);
+const APIAlertContext = React.createContext({} as APIAlertContextProps);
 
-const initialState: ErrorType[] = [];
+const initialState: AlertType[] = [];
 
 const reducer = (state = initialState, action: any) => {
   const { payload, type } = action;
@@ -32,24 +31,24 @@ const reducer = (state = initialState, action: any) => {
 export const APIErrorProvider: React.FC = ({ children }) => {
   const [errors, dispatch] = useReducer(reducer, initialState);
 
-  const setError = ({ message, status, type }: ErrorType) => {
+  const setAlert = ({ message, type }: AlertType) => {
     const id = uuidv4();
     dispatch({
       type: 'SET_ALERT',
-      payload: { id, message, status, type }
+      payload: { id, message, type }
     });
     setTimeout(() => dispatch({ type: 'REMOVE_ALERT', payload: id }), 3000);
   };
 
   return (
-    <APIErrorContext.Provider
+    <APIAlertContext.Provider
       value={{
         errors,
-        setError
+        setAlert
       }}>
       {children}
-    </APIErrorContext.Provider>
+    </APIAlertContext.Provider>
   );
 };
 
-export const useAlertContext = () => useContext(APIErrorContext);
+export const useAlertContext = () => useContext(APIAlertContext);

@@ -8,7 +8,7 @@ export interface UserProps {
 
 export interface IUser {
   isLoggedIn: boolean;
-  userId: number | null;
+  userId?: number;
 }
 
 export interface LoginRequest {
@@ -36,6 +36,13 @@ export interface UserLoginResponse {
   token: string;
   refreshToken: string;
 }
+
+export interface UserJoinResponse {
+  userId: number | string;
+  username: string;
+  email: string;
+}
+
 export interface UserAuthenticateResponse {
   email: string;
   username: string;

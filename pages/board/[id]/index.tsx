@@ -61,8 +61,8 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 
 const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const { setError } = useAlertContext();
-  const { auth, isLoggedIn } = useAuth();
+  const { setAlert } = useAlertContext();
+  const { user } = useAuth();
   const { data: board } = useSwr(`${BOARD_URL.BASE_BOARD}/${router.query.id}`, {
     initialData: initialBoard
   });
@@ -76,9 +76,8 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
       await deleteBoardAction(Number(router.query.id));
       router.push('/board');
     } catch (error) {
-      setError({
+      setAlert({
         type: 'error',
-        status: error?.response.status,
         message: '게시물 삭제 에러입니다.'
       });
     }
@@ -92,9 +91,8 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
       const res = await createCommentAction(Number(router.query.id), form);
       mutateComments([res.data, ...originalCache], false);
     } catch (error) {
-      setError({
+      setAlert({
         type: 'error',
-        status: error?.response.status,
         message: '댓글 작성 에러입니다.'
       });
       mutateComments(originalCache, false);
@@ -111,9 +109,8 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
       mutateComments([...realData], false);
       return false;
     } catch (error) {
-      setError({
+      setAlert({
         type: 'error',
-        status: error?.response.status,
         message: '댓글 수정 에러입니다.'
       });
       mutateComments(originalCache, false);
@@ -128,9 +125,8 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
     try {
       await deleteCommentAction(Number(router.query.id), commentId);
     } catch (error) {
-      setError({
+      setAlert({
         type: 'error',
-        status: error?.response.status,
         message: '댓글 삭제 에러입니다.'
       });
       mutateComments(originalCache, false);
@@ -141,12 +137,12 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
     return <div>Loading...</div>;
   }
 
-  const isAuthor: boolean = board?.userId == auth?.userId;
+  const isAuthor: boolean = board?.userId == user?.userId;
 
   console.log(comments);
 
   return (
-    <Layout isLoggedIn={isLoggedIn}>
+    <Layout isLoggedIn={user.isLoggedIn}>
       <FlexBox direction={'column'} gap={24}>
         <FlexBox
           direction={'column'}
@@ -222,7 +218,7 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
           </FlexBox>
         </FlexBox>
         <div>
-          {isLoggedIn && (
+          {user.isLoggedIn && (
             <HForm onSubmit={createComment} resolver={yupResolver(commentSchema)} mode={'onSubmit'}>
               {({ register, errors }) => (
                 <FlexBox>
@@ -253,7 +249,7 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
                 `}>
                 <BaseComment
                   comment={comment}
-                  currentUserId={auth?.userId}
+                  currentUserId={user?.userId}
                   handleEdit={editComment}
                   handleDelete={deleteComment}
                 />
@@ -263,7 +259,7 @@ const BoardPage = ({ initialBoard }: InferGetStaticPropsType<typeof getStaticPro
                     margin-left: 32px;
                   `}>
                   <p>답글 쓰기</p>
-                  {isLoggedIn && (
+                  {user.isLoggedIn && (
                     <HForm onSubmit={createComment} resolver={yupResolver(commentSchema)} mode={'onSubmit'}>
                       {({ register, errors }) => (
                         <FlexBox>

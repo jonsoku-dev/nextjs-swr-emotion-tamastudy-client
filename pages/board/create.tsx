@@ -47,24 +47,23 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const CreateBoardPage: NextPage<Props> = ({ initialCategories }) => {
   const router = useRouter();
-  const { setError } = useAlertContext();
-  const { isLoggedIn } = useAuth();
+  const { setAlert } = useAlertContext();
+  const { user } = useAuth();
 
   const handleSubmit = async (form: CreateBoardForm) => {
     try {
       const res = await createBoardAction(form);
       router.push(`/board/${res.data.boardId}`);
     } catch (error) {
-      setError({
+      setAlert({
         message: '게시물 생성 에러입니다.',
-        status: error?.response.status,
         type: 'error'
       });
     }
   };
 
   return (
-    <Layout isLoggedIn={isLoggedIn} redirectIfFound={false} redirectTo={'/board'}>
+    <Layout isLoggedIn={user.isLoggedIn} redirectIfFound={false} redirectTo={'/board'}>
       <HForm onSubmit={handleSubmit} resolver={yupResolver(createBoardSchema)}>
         {({ register, control, errors }) => (
           <>

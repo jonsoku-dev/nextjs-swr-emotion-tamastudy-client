@@ -29,7 +29,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 interface Props {}
 
 const EditBoardPage: NextPage<Props> = () => {
-  const { setError } = useAlertContext();
+  const { setAlert } = useAlertContext();
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
@@ -45,7 +45,7 @@ const EditBoardPage: NextPage<Props> = () => {
         mutateBoard({ ...board, ...res.data }, false);
         router.push(`/board/${router.query.id}`);
       } catch (error) {
-        setError({
+        setAlert({
           type: 'error',
           message: '게시물 수정 에러입니다.',
           status: error.response?.status
