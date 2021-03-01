@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import { IUser, JoinRequest, LoginRequest, UserJoinResponse, UserLoginResponse } from '../types';
-import { IS_SERVER } from '../utils';
+import { UserJoinRequestDto, UserLoginRequestDto, UserLoginResponseDto } from '../../generated-sources/openapi';
+import { IS_SERVER, userApi } from '../utils';
 import { useAlertContext } from './useAlertContext';
 
 interface ContextInterface {
-  user: IUser;
-  login: (form: LoginRequest) => Promise<void>;
-  join: (form: JoinRequest) => Promise<void>;
+  userId: number | null;
+  isLoggedIn: boolean;
+  login: (form: UserLoginRequestDto) => Promise<void>;
+  join: (form: UserJoinRequestDto) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -16,14 +17,13 @@ export const AuthStateContext = React.createContext({} as ContextInterface);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const { setAlert } = useAlertContext();
-  const [user, setUser] = useState<IUser>({
-    isLoggedIn: false
-  });
+
+  const [userId, setUserId] = useState<number | null>(null);
 
   const login = useCallback(
-    async (form: LoginRequest) => {
+    async (form: UserLoginRequestDto) => {
       try {
-        const { data } = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/login', form);
+        const { data } = await userApi.login(form);
         setAlert({
           type: 'info',
           message: '로그인하였습니다.'
@@ -43,12 +43,15 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
+      await userApi.logout('');
       await axios.post('http://localhost:8080/api/v1/user/logout');
       setAlert({
         type: 'info',
         message: '로그아웃하였습니다.'
       });
-      onLoginClear();
+      if (!IS_SERVER) {
+        onLoginClear();
+      }
     } catch (e) {
       setAlert({
         type: 'error',
@@ -57,9 +60,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, [IS_SERVER]);
 
-  const join = useCallback(async (form: JoinRequest) => {
+  const join = useCallback(async (form: UserJoinRequestDto) => {
     try {
-      await axios.post<UserJoinResponse>("http://localhost:8080/api/v1/user/join'", form);
+      await userApi.join(form);
       setAlert({
         type: 'info',
         message: '회원가입하였습니다. '
@@ -72,21 +75,28 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, []);
 
-  const onLoginSuccess = useCallback((data: UserLoginResponse) => {
+  const onLoginSuccess = useCallback((data: UserLoginResponseDto) => {
     localStorage.setItem('token', data.token);
     axios.defaults.headers['Authorization'] = `Bearer ${data.token}`;
-    setUser({
-      isLoggedIn: true,
-      userId: data.id as number
-    });
+    setUserId(data.id);
   }, []);
 
   const onLoginClear = useCallback(() => {
     localStorage.removeItem('token');
     axios.defaults.headers['Authorization'] = null;
-    setUser({
-      isLoggedIn: false
-    });
+    setUserId(null);
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    try {
+      const { data } = await userApi.refreshToken('', '');
+      await onLoginSuccess(data);
+    } catch (e) {
+      setAlert({
+        type: 'error',
+        message: '다시 로그인해주세요. '
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -108,6 +118,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         return response;
       },
       async function (error) {
+        console.log(error);
         /**
          * 1. access token 에러 (이상한토큰) → 401에러
          * 2. access token 만료 → 401에러
@@ -117,11 +128,11 @@ export const AuthProvider: React.FC = ({ children }) => {
         const originalRequest = error.config;
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
-          const { data } = await axios.post<UserLoginResponse>('http://localhost:8080/api/v1/user/refresh');
-          onLoginSuccess(data);
+          const { data } = await userApi.refreshToken('', '');
+          await onLoginSuccess(data);
           return axios(originalRequest);
         } else if (error.response?.status == 403) {
-          onLoginClear();
+          await onLoginClear();
         }
         return Promise.reject(error);
       }
@@ -132,10 +143,20 @@ export const AuthProvider: React.FC = ({ children }) => {
     };
   }, [IS_SERVER]);
 
+  useEffect(() => {
+    if (!IS_SERVER) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        onRefresh();
+      }
+    }
+  }, [IS_SERVER]);
+
   return (
     <AuthStateContext.Provider
       value={{
-        user,
+        userId,
+        isLoggedIn: !!userId,
         login,
         join,
         logout

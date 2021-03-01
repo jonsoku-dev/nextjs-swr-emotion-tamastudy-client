@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
-import axios from 'axios';
-import { GetStaticProps, NextPage } from 'next';
+import { GetStaticPropsContext, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
-import { ParsedUrlQuery, stringify } from 'querystring';
+import { stringify } from 'querystring';
 import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import useSWR from 'swr';
@@ -10,41 +9,38 @@ import useSWR from 'swr';
 import { CircleIconButton, FlexBox } from '../../components/atoms';
 import { BaseCard } from '../../components/molecules';
 import { Layout } from '../../components/templates/Layout';
-import { BOARD_URL, IBoard, ICategory, Paging, useAuth } from '../../shared';
+import { BoardCategoryDto } from '../../generated-sources/openapi';
+import { boardApi, useAuth } from '../../shared';
 import { useSwr } from '../../shared/hooks/useSwr';
 
-interface Props {
-  serverQuery: ParsedUrlQuery;
-  initialBoards?: Paging<IBoard>;
-}
-
-const initialBoardsKey = BOARD_URL.BASE_BOARD as string;
-
-export const getStaticProps: GetStaticProps = async () => {
-  let initialBoards = null;
-  await Promise.allSettled([axios.get(initialBoardsKey)]).then(([a]) => {
-    initialBoards = a.status === 'fulfilled' ? a.value.data : null;
-  });
+export const getStaticProps = async () => {
+  const { data } = await boardApi.getBoards(
+    {
+      keyword: '',
+      categoryName: ''
+    },
+    {}
+  );
 
   return {
     props: {
-      initialBoards
+      initialBoards: data
     } // will be passed to the page component as props
   };
 };
 
-const BoardsPage: NextPage<Props> = ({ initialBoards }) => {
-  const [key, setKey] = useState(initialBoardsKey);
+const BoardsPage = ({ initialBoards }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [key, setKey] = useState('http://localhost:8080/api/v1/board');
   const [keyword, setKeyword] = useState('');
   const router = useRouter();
   const { isLoggedIn } = useAuth();
 
   const { data: boards } = useSwr(key, {
-    initialData: initialBoardsKey == key ? initialBoards : undefined,
+    initialData: '/api/v1/board' == key ? initialBoards : undefined,
     revalidateOnMount: true
   });
 
-  const { data: categories } = useSWR<ICategory[]>(BOARD_URL.BASE_CATEGORY);
+  const { data: categories } = useSWR<BoardCategoryDto[]>('http://localhost:8080/api/v1/category');
 
   const handlePagination = useCallback(
     (page: { selected: number }) => {
@@ -103,7 +99,7 @@ const BoardsPage: NextPage<Props> = ({ initialBoards }) => {
 
   useEffect(() => {
     if (stringify(router.query)) {
-      setKey(initialBoardsKey + '?' + stringify(router.query));
+      setKey('/api/v1/board' + '?' + stringify(router.query));
     }
   }, [router.query]);
 
@@ -137,7 +133,7 @@ const BoardsPage: NextPage<Props> = ({ initialBoards }) => {
       </FlexBox>
       <FlexBox direction={'column'}>
         {boards &&
-          boards.content.map((board: IBoard) => (
+          boards.content?.map((board) => (
             <BaseCard
               key={board.boardId}
               id={board.boardId}
@@ -155,8 +151,8 @@ const BoardsPage: NextPage<Props> = ({ initialBoards }) => {
           nextLabel={'next'}
           breakLabel={'...'}
           breakClassName={'break-me'}
-          forcePage={boards.pageable.pageNumber}
-          pageCount={boards.totalPages ?? 0}
+          forcePage={boards?.pageable?.pageNumber}
+          pageCount={boards?.totalPages ?? 0}
           marginPagesDisplayed={2}
           pageRangeDisplayed={2}
           onPageChange={handlePagination}

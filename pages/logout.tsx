@@ -13,8 +13,7 @@ const LogoutPage: NextPage<Props> = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      logout();
-      router.back();
+      logout().then(() => router.back());
     }
   }, [isLoggedIn, logout]);
 

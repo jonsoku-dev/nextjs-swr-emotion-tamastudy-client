@@ -10,17 +10,9 @@ import useSWR from 'swr';
 
 import { HForm, HInput, HSelect } from '../../../components/atoms';
 import { FormItem } from '../../../components/molecules';
-import { Layout } from '../../../components/templates/Layout';
-import {
-  BOARD_URL,
-  CreateBoardForm,
-  createBoardSchema,
-  editBoardAction,
-  IBoard,
-  ICategory,
-  useAlertContext,
-  useAuth
-} from '../../../shared';
+import { Layout } from '../../../components/templates';
+import { BoardCategoryDto, BoardCreateRequest, BoardFlatDto } from '../../../generated-sources/openapi';
+import { boardApi, createBoardSchema, useAlertContext, useAuth } from '../../../shared';
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false
@@ -33,22 +25,21 @@ const EditBoardPage: NextPage<Props> = () => {
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
-  const { data: board, mutate: mutateBoard } = useSWR<IBoard>(`${BOARD_URL.BASE_BOARD}/${router.query.id}`, {});
+  const { data: board, mutate: mutateBoard } = useSWR<BoardFlatDto>(`/api/v1/board/${router.query.id}`, {});
 
-  const { data: categories } = useSWR<ICategory[]>(`${BOARD_URL.BASE_CATEGORY}`, {});
+  const { data: categories } = useSWR<BoardCategoryDto[]>(`http://localhost:8080/api/v1/category`, {});
 
-  const handleSubmit = async (form: CreateBoardForm) => {
+  const handleSubmit = async (form: BoardCreateRequest) => {
     if (board) {
       mutateBoard({ ...board, ...form }, false);
       try {
-        const res = await editBoardAction(Number(router.query.id), form);
+        const res = await boardApi.updateBoard(Number(router.query.id), form);
         mutateBoard({ ...board, ...res.data }, false);
         router.push(`/board/${router.query.id}`);
       } catch (error) {
         setAlert({
           type: 'error',
-          message: '게시물 수정 에러입니다.',
-          status: error.response?.status
+          message: '게시물 수정 에러입니다.'
         });
         mutateBoard({ ...board }, false);
       }

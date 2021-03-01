@@ -39,6 +39,7 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     'jsx-a11y/anchor-is-valid': [
       'error',
       {

@@ -25,7 +25,6 @@ export const ErrorBoundary: React.FC<Props> = () => {
             background-color: ${err.type === 'warn' ? 'yellow' : err.type === 'error' ? 'red' : 'skyblue'};
           `}>
           <p>{err.message}</p>
-          <p>{err.status}</p>
         </div>
       ))}
     </div>

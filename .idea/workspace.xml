@@ -14,13 +14,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e1fc622-5108-457f-81a9-1ff3d0c2c35c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.eslintrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/BaseComment/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/BaseComment/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ErrorBoundary/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ErrorBoundary/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/fetchJson.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/session.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/authenticate.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/clear.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/login.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/logout.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/refresh.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/edit.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/board/[id]/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/[id]/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/board/create.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/create.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/hooks/useAlertContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useAlertContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/board/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/board/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/join.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/join.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/logout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/logout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/actions/board.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/actions/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/actions/shared.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/actions/user.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/enums/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/enums/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/enums/shared.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/enums/shared.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/enums/urls.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/hooks/useAuth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/shared/hooks/useAuth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/types/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/types/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useBoards.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useFetchCache.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useRequest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/hooks/useUser.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/schemas/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/schemas/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/types/board.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/types/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/types/shared.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/types/user.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/utils/fetchJson.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/utils/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/utils/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +99,7 @@
     <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
-    <property name="settings.editor.selected.configurable" value="configurable.emberjs" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -107,7 +143,8 @@
       <workItem from="1613485903847" duration="226000" />
       <workItem from="1613486143855" duration="218000" />
       <workItem from="1613486377363" duration="133023000" />
-      <workItem from="1614400913631" duration="8742000" />
+      <workItem from="1614400913631" duration="18531000" />
+      <workItem from="1614572858710" duration="12844000" />
     </task>
     <servers />
   </component>
@@ -130,15 +167,5 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/shared/enums/shared.ts</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -1,17 +1,16 @@
-import axios from 'axios';
 import { NextPage } from 'next';
 
 import { Layout } from '../components/templates/Layout';
-import { createBoardAction, useAuth } from '../shared';
+import { boardApi, useAuth, userApi } from '../shared';
 
 interface Props {}
 
 const IndexPage: NextPage<Props> = () => {
-  const { user, login, logout } = useAuth();
+  const { isLoggedIn, login, logout } = useAuth();
 
   const handleSubmit = async () => {
     try {
-      const res = await createBoardAction({
+      const res = await boardApi.createBoard({
         title: '213',
         categoryId: 1,
         description: '213213213'
@@ -24,15 +23,27 @@ const IndexPage: NextPage<Props> = () => {
 
   const handleRefresh = async () => {
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/user/refresh');
+      const res = await userApi.refreshToken('', '');
       alert(JSON.stringify(res.data));
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleGetBoards = async () => {
+    const { data } = await boardApi.getBoardsV1(
+      {
+        keyword: '',
+        categoryName: ''
+      },
+      {}
+    );
+    console.log(data);
+  };
+
   return (
-    <Layout isLoggedIn={user.isLoggedIn}>
+    <Layout isLoggedIn={isLoggedIn}>
+      <button onClick={handleGetBoards}>getBoards</button>
       <button
         onClick={() =>
           login({
@@ -45,7 +56,6 @@ const IndexPage: NextPage<Props> = () => {
       <button onClick={logout}>logout</button>
       <button onClick={handleSubmit}>handleSubmit</button>
       <button onClick={handleRefresh}>handleRefresh</button>
-      auth: ${JSON.stringify(user)}
     </Layout>
   );
 };

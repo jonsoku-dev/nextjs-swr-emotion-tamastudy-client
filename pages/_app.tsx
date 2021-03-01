@@ -8,23 +8,15 @@ import { ErrorBoundary } from '../components/templates';
 import { APIErrorProvider, AuthProvider, GlobalStyle, IS_SERVER, theme } from '../shared';
 
 axios.defaults.withCredentials = true;
+axios.defaults.url = 'http://localhost:8080';
 axios.defaults.headers['Authorization'] = IS_SERVER ? null : `Bearer ${localStorage.getItem('token')}`;
-
-axios.interceptors.request.use(
-  function (config) {
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <SWRConfig
       value={{
-        fetcher: async (url: string, queries: any) => {
-          const res = await axios.get(queries ? `${url}?${queries}` : url);
+        fetcher: async (url: string) => {
+          const res = await axios.get(url);
           return res.data;
         },
         revalidateOnFocus: false,
